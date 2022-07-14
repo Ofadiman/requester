@@ -2,9 +2,15 @@
   "name": "golden-retriever",
   "version": "0.1.0",
   "description": "Golden retriever is an application that helps you test APIs.",
-  "main": "main.js",
+  "main": "public/electron.js",
+  "homepage": "./",
   "scripts": {
-    "dev": "electron ."
+    "dev": "concurrently -k \"BROWSER=none npm run react:dev\" \"npm run electron:dev\"",
+    "electron:dev": "wait-on tcp:3000 && electron .",
+    "react:build": "react-scripts build",
+    "react:dev": "react-scripts start",
+    "react:eject": "react-scripts eject",
+    "react:test": "react-scripts test"
   },
   "author": {
     "name": "Szymon Jaworski",
@@ -15,5 +21,25 @@
   "devDependencies": {
     "electron": "^19.0.8",
     "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "concurrently": "^7.2.2",
+    "electron-is-dev": "^2.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "wait-on": "^6.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,4 +1,12 @@
-/**
+# Ignore everything by default.
+*/
+
+# Include the following directories.
+!public
+!src
+!src/**
+
+# Include the following files.
 !.gitignore
 !.prettierrc.js
 !index.html
@@ -6,3 +14,4 @@
 !package-lock.json
 !package.json
 !preload.js
+!readme.md

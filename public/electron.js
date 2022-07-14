@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron')
+const isDev = require('electron-is-dev')
 const path = require('path')
 
 const createWindow = () => {
@@ -6,11 +7,29 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
     },
   })
 
-  browserWindow.loadFile('index.html')
+  browserWindow
+    .loadURL(
+      isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`,
+    )
+    .then(() => {
+      console.log('URL loaded 🚀')
+    })
+    .catch((error) => {
+      console.error('Something went wrong 💥')
+      console.error(error)
+    })
+
+  /**
+   * Theoretically, I can open devtools like this when an application starts in development mode, but I'm not sure yet if I want to.
+   *
+   * if (isDev) {
+   *   browserWindow.webContents.openDevTools({ mode: 'detach' })
+   * }
+   */
 }
 
 app.whenReady().then(() => {
