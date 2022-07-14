@@ -1,0 +1,8 @@
+/**
+!.gitignore
+!.prettierrc.js
+!index.html
+!main.js
+!package-lock.json
+!package.json
+!preload.js
