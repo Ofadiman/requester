@@ -1,17 +1,19 @@
 # Ignore everything by default.
-*/
+*
 
 # Include the following directories.
-!public
 !src
 !src/**
 
 # Include the following files.
+!.eslintrc.json
 !.gitignore
 !.prettierrc.js
-!index.html
-!main.js
-!package-lock.json
 !package.json
-!preload.js
 !readme.md
+!tsconfig.json
+!webpack.main.config.js
+!webpack.plugins.js
+!webpack.renderer.config.js
+!webpack.rules.js
+!yarn.lock
