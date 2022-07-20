@@ -1,12 +1,11 @@
 import React, { ReactElement } from 'react'
 import { Button } from '@mui/material'
-import { AppDispatch, RootState } from '../store'
-import { useDispatch, useSelector } from 'react-redux'
 import { counterSlice } from './counter.slice'
+import { useTypedDispatch, useTypedSelector } from '../store'
 
 export const CounterView = (): ReactElement => {
-  const count = useSelector((state: RootState) => state.counter.value)
-  const dispatch = useDispatch<AppDispatch>()
+  const count = useTypedSelector((state) => state.counter.value)
+  const dispatch = useTypedDispatch()
 
   return (
     <div>
