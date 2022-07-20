@@ -90,8 +90,11 @@
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.1",
+    "@reduxjs/toolkit": "^1.8.3",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.0.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.2"
   }
 }

@@ -1,15 +1,16 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import Button from '@mui/material/Button'
 import { CssBaseline } from '@mui/material'
-import { Fragment } from 'react'
+import { Provider } from 'react-redux'
+import { store } from './store'
+import { CounterView } from './counter/counter.view'
 
 function render() {
   ReactDOM.render(
-    <Fragment>
+    <Provider store={store}>
       <CssBaseline />
-      <Button>Install Material UI!</Button>
-    </Fragment>,
+      <CounterView />
+    </Provider>,
     document.body,
   )
 }
