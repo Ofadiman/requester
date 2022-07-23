@@ -10,9 +10,9 @@ export const CounterView = (): ReactElement => {
   return (
     <div>
       <div>
-        <Button onClick={() => dispatch(counterSlice.actions.increment())}>Increment</Button>
-        <span>{count}</span>
         <Button onClick={() => dispatch(counterSlice.actions.decrement())}>Decrement</Button>
+        <span>{count}</span>
+        <Button onClick={() => dispatch(counterSlice.actions.increment())}>Increment</Button>
       </div>
     </div>
   )

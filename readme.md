@@ -11,4 +11,5 @@ When configuring the application, I first went through the guide on the official
 
 # Resources
 
-- [Building Electron desktop apps with React using Codemagic.](https://blog.codemagic.io/building-electron-desktop-apps-with-react/)
+- [A tutorial showing how to integrate the `create-react-app` template with the `electron`.](https://blog.codemagic.io/building-electron-desktop-apps-with-react/)
+- [A tutorial showing how to create communication between the `react` application and the `electron`.](https://wykrhm.medium.com/creating-standalone-desktop-applications-with-react-electron-and-sqlite3-269dbb310aee)

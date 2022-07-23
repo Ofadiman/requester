@@ -4,6 +4,8 @@
 # Include the following directories.
 !src
 !src/**
+!assets
+!assets/**
 
 # Include the following files.
 !.eslintrc.json
