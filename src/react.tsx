@@ -7,7 +7,7 @@ import { store } from './store'
 import { SettingsView } from './settings/settings.view'
 import { PokemonView } from './pokemon/pokemon.view'
 import { CounterView } from './counter/counter.view'
-import { HashRouter, Link, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import { HomeView } from './home/home.view'
 
 const root = ReactDOMClient.createRoot(document.getElementById('react-app'))
@@ -17,12 +17,6 @@ root.render(
     <CssBaseline />
     <Provider store={store}>
       <HashRouter>
-        <nav>
-          <Link to={`/`}>Home view</Link>
-          <Link to={`/pokemon`}>Pokemon view</Link>
-          <Link to={`/settings`}>Settings view</Link>
-          <Link to={`/counter`}>Counter view</Link>
-        </nav>
         <Routes>
           <Route path={`/`} element={<HomeView />} />
           <Route path={`/pokemon`} element={<PokemonView />} />

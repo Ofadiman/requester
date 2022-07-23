@@ -26,4 +26,5 @@
  * ```
  */
 
+import './bootstrap-dayjs'
 import './react'
