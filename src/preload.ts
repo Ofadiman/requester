@@ -12,4 +12,5 @@ import { CONTEXT_BRIDGE_EVENT_NAMES } from './context-bridge-event-names'
 contextBridge.exposeInMainWorld('api', {
   resizeWindow: (args: unknown) =>
     ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESIZE_WINDOW, args),
+  quitApp: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.QUIT_APP),
 })

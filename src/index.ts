@@ -141,3 +141,7 @@ process.on('uncaughtException', (error) => {
 ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.RESIZE_WINDOW, (event, args) => {
   setWindowSize(args)
 })
+
+ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.QUIT_APP, () => {
+  app.quit()
+})

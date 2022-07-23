@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
 import { WindowSize } from '../file-system-store'
+import { Box, Button } from '@mui/material'
 
 export const WINDOW_SIZE_CHANNEL = 'WINDOW_SIZE_CHANNEL'
 
@@ -22,5 +23,19 @@ export const SettingsView = (): ReactElement => {
     }
   }, [])
 
-  return <div>Settings view works.</div>
+  const handleAppQuit = () => {
+    void (window as any).api.quitApp()
+  }
+
+  return (
+    <Box
+      sx={{
+        borderColor: 'black',
+        borderWidth: 1,
+      }}
+    >
+      Settings view works.
+      <Button onClick={handleAppQuit}>Quit app</Button>
+    </Box>
+  )
 }
