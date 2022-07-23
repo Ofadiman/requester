@@ -14,4 +14,6 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESIZE_WINDOW, args),
   quitApp: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.QUIT_APP),
   openDirectoryPicker: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.OPEN_DIRECTORY_PICKER),
+  chooseWorkspace: (args: string) =>
+    ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.CHOOSE_WORKSPACE, args),
 })
