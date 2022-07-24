@@ -11,9 +11,6 @@ import { configureAppStore, RootState } from './redux/store'
 
 const root = ReactDOMClient.createRoot(document.getElementById('react-app'))
 
-// 1. Nie renderuj nic do momentu, aż store nie będzie załadowany z file systemu.
-// 2. Na uruchomienie aplikacji wyślij
-
 window.electron.initializeReduxStore().then((reduxStore: RootState) => {
   console.log(
     '\x1b[33m\x1b[40m%s\x1b[0m',
@@ -47,7 +44,7 @@ window.electron.initializeReduxStore().then((reduxStore: RootState) => {
       <Provider store={store}>
         <Button
           onClick={() => {
-            void window.electron.resetStore()
+            void window.electron.clearReduxStore()
           }}
         >
           Reset store

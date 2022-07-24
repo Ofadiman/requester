@@ -25,7 +25,7 @@ export const HomeView: FC = () => {
   const navigate = useNavigate()
 
   const openDirectoryPicker = async () => {
-    const result: Electron.OpenDialogReturnValue = await (window as any).api.openDirectoryPicker()
+    const result: Electron.OpenDialogReturnValue = await window.electron.openDirectoryPicker()
 
     if (result.canceled) {
       setIsSnackbarOpen(true)
@@ -51,7 +51,6 @@ export const HomeView: FC = () => {
     }
 
     dispatch(workspacesSlice.actions.addOne(pickedWorkspace))
-    const workspaces = await (window as any).api.chooseWorkspace(pickedWorkspace)
     console.log(
       '\x1b[33m\x1b[40m%s\x1b[0m',
       `\n===== [DEBUG] ===== Workspaces after update ===== [DEBUG] =====`,

@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { CONTEXT_BRIDGE_EVENT_NAMES } from './context-bridge-event-names'
-import { Workspace } from './redux/workspaces/workspaces.slice'
+import { CHANNELS } from './constants/channels'
 import { RootState } from './redux/store'
 
 /**
@@ -15,19 +14,16 @@ import { RootState } from './redux/store'
 
 const PRELOADED = {
   initializeReduxStore: async () => {
-    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.INITIALIZE_REDUX_STORE)
+    return ipcRenderer.invoke(CHANNELS.REDUX_STORE_INITIALIZE)
   },
   openDirectoryPicker: async () => {
-    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.OPEN_DIRECTORY_PICKER)
+    return ipcRenderer.invoke(CHANNELS.DIRECTORY_PICKER_OPEN)
   },
-  resetStore: async () => {
-    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESET_STORE)
-  },
-  chooseWorkspace: async (args: Workspace) => {
-    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.CHOOSE_WORKSPACE, args)
+  clearReduxStore: async () => {
+    return ipcRenderer.invoke(CHANNELS.REDUX_STORE_CLEAR)
   },
   persistReduxStore: async (args: RootState) => {
-    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.PERSIST_REDUX_STORE, args)
+    return ipcRenderer.invoke(CHANNELS.REDUX_STORE_PERSIST, args)
   },
 } as const
 

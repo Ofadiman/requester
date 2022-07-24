@@ -1,7 +1,6 @@
 import './dayjs.bootstrap'
-import { app, BrowserWindow, session, ipcMain, dialog } from 'electron'
-import { CONTEXT_BRIDGE_EVENT_NAMES } from './context-bridge-event-names'
-import { addWorkspace, clearStore, getWindowSize, setWindowSize } from './file-system-store'
+import { app, BrowserWindow, dialog, ipcMain, session } from 'electron'
+import { CHANNELS } from './constants/channels'
 import dayjs from 'dayjs'
 import { FILE_SYSTEM_STORAGE_KEYS, fileSystemStorage } from './utils/file-system.storage'
 import { RootState } from './redux/store'
@@ -71,11 +70,9 @@ const createWindow = async (): Promise<void> => {
     `===== [DEBUG] ===== MAIN_WINDOW_WEBPACK_ENTRY ===== [DEBUG] =====\n`,
   )
 
-  const windowSettings = getWindowSize()
-
   const mainWindow = new BrowserWindow({
-    height: windowSettings.height,
-    width: windowSettings.width,
+    height: 900,
+    width: 1600,
     webPreferences: {
       sandbox: true, // I set this option to `true` because it will limit the renderer's process permissions while it is running, which translates into increased security. Official documentation recommends so. (https://www.electronjs.org/docs/latest/tutorial/sandbox)
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -120,7 +117,7 @@ app.whenReady().then(async () => {
     })
   })
 
-  ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.OPEN_DIRECTORY_PICKER, async (event) => {
+  ipcMain.handle(CHANNELS.DIRECTORY_PICKER_OPEN, async (event) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     // TODO: Handle a scenario when someone picks many directories at once.
     const result = await dialog.showOpenDialog(win, {
@@ -139,28 +136,16 @@ app.whenReady().then(async () => {
     return result
   })
 
-  ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.RESIZE_WINDOW, (event, args) => {
-    setWindowSize(args)
-  })
-
-  ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.QUIT_APP, () => {
-    app.quit()
-  })
-
-  ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.CHOOSE_WORKSPACE, (_event, args) => {
-    return addWorkspace(args)
-  })
-
-  ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.RESET_STORE, () => {
-    clearStore()
-  })
-
-  ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.INITIALIZE_REDUX_STORE, () => {
+  ipcMain.handle(CHANNELS.REDUX_STORE_INITIALIZE, () => {
     return fileSystemStorage.get(FILE_SYSTEM_STORAGE_KEYS.REDUX_STORE)
   })
 
-  ipcMain.handle(CONTEXT_BRIDGE_EVENT_NAMES.PERSIST_REDUX_STORE, (_event, store: RootState) => {
+  ipcMain.handle(CHANNELS.REDUX_STORE_PERSIST, (_event, store: RootState) => {
     fileSystemStorage.set(FILE_SYSTEM_STORAGE_KEYS.REDUX_STORE, store)
+  })
+
+  ipcMain.handle(CHANNELS.REDUX_STORE_CLEAR, () => {
+    fileSystemStorage.clear()
   })
 
   await createWindow()
