@@ -1,4 +1,4 @@
-import './bootstrap-dayjs'
+import './dayjs.bootstrap'
 import { app, BrowserWindow, session, ipcMain, dialog } from 'electron'
 import { CONTEXT_BRIDGE_EVENT_NAMES } from './context-bridge-event-names'
 import { addWorkspace, clearStore, getWindowSize, setWindowSize } from './file-system-store'
