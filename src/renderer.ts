@@ -26,5 +26,6 @@
  * ```
  */
 
+// TODO: Maybe I want to put all logic from `react.tsx` in this file to reduce the number of files in the project.
 import './bootstrap-dayjs'
 import './react'

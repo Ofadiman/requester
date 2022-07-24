@@ -1,16 +1,21 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { setupListeners } from '@reduxjs/toolkit/dist/query'
-import { pokemonApi } from '../pokemon/pokemon.api'
-import { counterSlice } from '../counter/counter.slice'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import { workspacesSlice } from './workspaces/workspaces.slice'
-import rootReducer from './root.reducer'
+
+export type RootState = ReturnType<typeof rootReducer>
+const rootReducer = combineReducers({
+  [workspacesSlice.name]: workspacesSlice.reducer,
+})
 
 // TODO: Check which middlewares and enhancers I can use to improve the application or developer experience.
-// TODO: Fix typing on preloadedState.
-export const configureAppStore = (preloadedState: unknown) => {
+export const configureAppStore = (preloadedState: RootState) => {
+  // TODO: Preload state on application initialization.
   const store = configureStore({
     reducer: rootReducer,
+    // TODO: I cannot simply pass `preloadedState` here because state inferred from root reducer and state expected by the `preloadedState` key have some different properties that are presumably used for type inference.
+    preloadedState: {
+      workspacesSlice: preloadedState.workspacesSlice,
+    },
   })
 
   // TODO: Hot module replacement is not working for unknown reasons.
@@ -21,19 +26,5 @@ export const configureAppStore = (preloadedState: unknown) => {
   return store
 }
 
-export const store = configureStore({
-  reducer: {
-    [counterSlice.name]: counterSlice.reducer,
-    [workspacesSlice.name]: workspacesSlice.reducer,
-    [pokemonApi.reducerPath]: pokemonApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(pokemonApi.middleware),
-})
-
-setupListeners(store.dispatch)
-
-type TypedDispatch = () => typeof store.dispatch
-export const useTypedDispatch: TypedDispatch = useDispatch
-
-type TypedSelector = TypedUseSelectorHook<ReturnType<typeof store.getState>>
+type TypedSelector = TypedUseSelectorHook<RootState>
 export const useTypedSelector: TypedSelector = useSelector

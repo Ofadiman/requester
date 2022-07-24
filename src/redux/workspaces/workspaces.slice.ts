@@ -8,6 +8,7 @@ export const workspacesSlice = createSlice({
   initialState,
   reducers: {
     addOne: workspacesAdapter.addOne,
+    updateOne: workspacesAdapter.updateOne,
   },
 })
 

@@ -4,10 +4,11 @@ import { SxProps } from '@mui/system'
 import { Theme } from '@mui/material/styles'
 import { AddRounded, CloseRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
-import { useTypedDispatch, useTypedSelector } from '../redux/store'
+import { useTypedSelector } from '../redux/store'
 import { Workspace, workspacesAdapter, workspacesSlice } from '../redux/workspaces/workspaces.slice'
 import { uuidFactory } from '../utils/uuid.factory'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 const styles: SxProps<Theme> = {
   width: '100vw',
@@ -16,7 +17,7 @@ const styles: SxProps<Theme> = {
 }
 
 export const HomeView: FC = () => {
-  const dispatch = useTypedDispatch()
+  const dispatch = useDispatch()
   const workspaces = useTypedSelector((state) =>
     workspacesAdapter.getSelectors().selectAll(state.workspacesSlice),
   )
@@ -60,7 +61,7 @@ export const HomeView: FC = () => {
       '\x1b[33m\x1b[40m%s\x1b[0m',
       `===== [DEBUG] ===== Workspaces after update ===== [DEBUG] =====\n`,
     )
-    navigate('/main', { replace: true })
+    // navigate('/main', { replace: true })
   }
 
   const handleSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
