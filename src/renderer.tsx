@@ -9,7 +9,11 @@ import { Provider } from 'react-redux'
 import { StrictMode } from 'react'
 import { configureAppStore, RootState } from './redux/store'
 
-const root = ReactDOMClient.createRoot(document.getElementById('react-app'))
+const htmlRoot = document.getElementById('react-app')
+if (htmlRoot === null) {
+  throw new Error(`HTML element with id "react-app" not found in "index.html" file`)
+}
+const root = ReactDOMClient.createRoot(htmlRoot)
 
 window.electron.initializeReduxStore().then((reduxStore: RootState) => {
   console.log(
@@ -24,7 +28,7 @@ window.electron.initializeReduxStore().then((reduxStore: RootState) => {
 
   const store = configureAppStore(reduxStore)
 
-  const _unsubscribe = store.subscribe(() => {
+  store.subscribe(() => {
     const currentReduxStore = store.getState()
     void window.electron.persistReduxStore(currentReduxStore)
     console.log(

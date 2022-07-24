@@ -33,16 +33,11 @@ export const HomeView: FC = () => {
       return
     }
 
-    console.log(
-      '\x1b[33m\x1b[40m%s\x1b[0m',
-      `\n===== [DEBUG] ===== Result after picking a directory on the front end ===== [DEBUG] =====`,
-    )
-    console.log(result)
-    console.log(
-      '\x1b[33m\x1b[40m%s\x1b[0m',
-      `===== [DEBUG] ===== Result after picking a directory on the front end ===== [DEBUG] =====\n`,
-    )
     const [workspacePath] = result.filePaths
+
+    if (workspacePath === undefined) {
+      throw new Error(`Workspace path cannot be undefined.`)
+    }
 
     const pickedWorkspace: Workspace = {
       id: uuidFactory.generateVersion4(),
@@ -51,19 +46,10 @@ export const HomeView: FC = () => {
     }
 
     dispatch(workspacesSlice.actions.addOne(pickedWorkspace))
-    console.log(
-      '\x1b[33m\x1b[40m%s\x1b[0m',
-      `\n===== [DEBUG] ===== Workspaces after update ===== [DEBUG] =====`,
-    )
-    console.log(workspaces)
-    console.log(
-      '\x1b[33m\x1b[40m%s\x1b[0m',
-      `===== [DEBUG] ===== Workspaces after update ===== [DEBUG] =====\n`,
-    )
-    // navigate('/main', { replace: true })
+    navigate('/main', { replace: true })
   }
 
-  const handleSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+  const handleSnackbarClose = (_event: React.SyntheticEvent | Event, reason?: string) => {
     // This line is taken from MaterialUI documentation and I don't know what it is doing.
     if (reason === 'clickaway') {
       return

@@ -5,7 +5,7 @@
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
-    "dev": "rm -rf .webpack && electron-forge start",
+    "dev": "rm -rf .webpack && export NODE_ENV=\"development\" && export LOG_LEVEL=\"debug\" && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish"
@@ -105,6 +105,7 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
     "react-router-dom": "6",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zod": "^3.17.10"
   }
 }
