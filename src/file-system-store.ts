@@ -1,6 +1,7 @@
 import Store from 'electron-store'
 import { append } from 'ramda'
 import { uuidFactory } from './utils/uuid.factory'
+import { Workspace } from './redux/workspaces/workspaces.slice'
 
 const WINDOW_SIZE_KEY = 'WINDOW_SIZE_KEY' as const
 
@@ -40,21 +41,20 @@ export const setWindowSize = (size: WindowSize): void => {
   store.set(WINDOW_SIZE_KEY, size)
 }
 
-export type Workspace = {
-  name: string
-  id: string
-}
-
 const WORKSPACES_KEY = `WORKSPACES_KEY`
 
-export const addWorkspace = (name: string): Workspace[] => {
+export const addWorkspace = (workspace: Workspace): Workspace[] => {
   // TODO: Remove unsafe casting.
   const workspaces: Workspace[] =
     (store.get(WORKSPACES_KEY) as Workspace[] | undefined) ?? ([] as Workspace[])
 
-  const newWorkspaces = append({ id: uuidFactory.generateVersion4(), name })(workspaces)
+  const newWorkspaces = append(workspace)(workspaces)
 
   store.set(WORKSPACES_KEY, newWorkspaces)
 
   return newWorkspaces
+}
+
+export const clearStore = () => {
+  store.clear()
 }

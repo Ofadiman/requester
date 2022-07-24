@@ -3,6 +3,7 @@
 
 import { contextBridge, ipcRenderer } from 'electron'
 import { CONTEXT_BRIDGE_EVENT_NAMES } from './context-bridge-event-names'
+import { Workspace } from './redux/workspaces/workspaces.slice'
 
 // The ways of communication between electron process and react process.
 // 1. `invoke` — You send data from the frontend, process it with `ipcMain.handle` on the backend and return information to the frontend.
@@ -14,6 +15,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESIZE_WINDOW, args),
   quitApp: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.QUIT_APP),
   openDirectoryPicker: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.OPEN_DIRECTORY_PICKER),
-  chooseWorkspace: (args: string) =>
+  resetStore: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESET_STORE),
+  chooseWorkspace: (args: Workspace) =>
     ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.CHOOSE_WORKSPACE, args),
 })

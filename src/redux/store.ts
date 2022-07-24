@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { COUNTER_SLICE_NAME, counterSlice } from './counter/counter.slice'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { pokemonApi } from './pokemon/pokemon.api'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
+import { pokemonApi } from '../pokemon/pokemon.api'
+import { counterSlice } from '../counter/counter.slice'
+import { workspacesSlice } from './workspaces/workspaces.slice'
 
 export const store = configureStore({
   reducer: {
-    [COUNTER_SLICE_NAME]: counterSlice.reducer,
+    [counterSlice.name]: counterSlice.reducer,
+    [workspacesSlice.name]: workspacesSlice.reducer,
     [pokemonApi.reducerPath]: pokemonApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(pokemonApi.middleware),

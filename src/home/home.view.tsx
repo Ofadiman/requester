@@ -4,6 +4,10 @@ import { SxProps } from '@mui/system'
 import { Theme } from '@mui/material/styles'
 import { AddRounded, CloseRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
+import { useTypedDispatch, useTypedSelector } from '../redux/store'
+import { Workspace, workspacesSlice } from '../redux/workspaces/workspaces.slice'
+import { uuidFactory } from '../utils/uuid.factory'
+import { useNavigate } from 'react-router-dom'
 
 const styles: SxProps<Theme> = {
   width: '100vw',
@@ -12,7 +16,10 @@ const styles: SxProps<Theme> = {
 }
 
 export const HomeView: FC = () => {
+  const dispatch = useTypedDispatch()
+  const workspaces = useTypedSelector((state) => state.workspaces.workspaces)
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
+  const navigate = useNavigate()
 
   const openDirectoryPicker = async () => {
     const result: Electron.OpenDialogReturnValue = await (window as any).api.openDirectoryPicker()
@@ -32,8 +39,16 @@ export const HomeView: FC = () => {
       '\x1b[33m\x1b[40m%s\x1b[0m',
       `===== [DEBUG] ===== Result after picking a directory on the front end ===== [DEBUG] =====\n`,
     )
+    const [workspacePath] = result.filePaths
 
-    const workspaces = await (window as any).api.chooseWorkspace(result.filePaths[0])
+    const pickedWorkspace: Workspace = {
+      id: uuidFactory.generateVersion4(),
+      path: workspacePath,
+      name: `Some name here ${Math.random()}`,
+    }
+
+    dispatch(workspacesSlice.actions.add(pickedWorkspace))
+    const workspaces = await (window as any).api.chooseWorkspace(pickedWorkspace)
     console.log(
       '\x1b[33m\x1b[40m%s\x1b[0m',
       `\n===== [DEBUG] ===== Workspaces after update ===== [DEBUG] =====`,
@@ -43,9 +58,7 @@ export const HomeView: FC = () => {
       '\x1b[33m\x1b[40m%s\x1b[0m',
       `===== [DEBUG] ===== Workspaces after update ===== [DEBUG] =====\n`,
     )
-
-    // TODO: Probably, I want to redirect user to main window here.
-    // TODO: Probably, I have to update redux store here (workspaces slice).
+    navigate('/main', { replace: true })
   }
 
   const handleSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
@@ -59,6 +72,15 @@ export const HomeView: FC = () => {
 
   return (
     <Box sx={styles}>
+      {workspaces.map((workspace) => {
+        return (
+          <Box>
+            Id: {workspace.id}
+            Name: {workspace.name}
+            Path: {workspace.path}
+          </Box>
+        )
+      })}
       <Button
         variant={'contained'}
         sx={{
