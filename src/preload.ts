@@ -19,10 +19,6 @@ contextBridge.exposeInMainWorld('api', {
   initializeReduxStore: () => {
     return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.INITIALIZE_REDUX_STORE)
   },
-  arbitraryValue: { foo: 'bar' },
-  resizeWindow: (args: unknown) =>
-    ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESIZE_WINDOW, args),
-  quitApp: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.QUIT_APP),
   openDirectoryPicker: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.OPEN_DIRECTORY_PICKER),
   resetStore: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESET_STORE),
   chooseWorkspace: (args: Workspace) =>

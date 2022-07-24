@@ -5,9 +5,7 @@ import { Button, CssBaseline } from '@mui/material'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { HomeView } from './home/home.view'
 import { MainView } from './main/main.view'
-import { PokemonView } from './pokemon/pokemon.view'
 import { Provider } from 'react-redux'
-import { SettingsView } from './settings/settings.view'
 import { StrictMode } from 'react'
 import { configureAppStore, RootState } from './redux/store'
 
@@ -64,8 +62,6 @@ window.api.initializeReduxStore().then((reduxStore: RootState) => {
         <HashRouter>
           <Routes>
             <Route path={`/`} element={<HomeView />} />
-            <Route path={`/pokemon`} element={<PokemonView />} />
-            <Route path={`/settings`} element={<SettingsView />} />
             <Route path={`/main`} element={<MainView />} />
           </Routes>
         </HashRouter>
