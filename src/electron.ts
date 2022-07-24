@@ -27,7 +27,7 @@ if (electronConfig.isDevelopment) {
 export const fileSystemStorage = new Store()
 
 const createWindow = async (): Promise<void> => {
-  const mainWindow = new BrowserWindow({
+  const browserWindow = new BrowserWindow({
     height: 900,
     width: 1600,
     webPreferences: {
@@ -38,17 +38,17 @@ const createWindow = async (): Promise<void> => {
   })
 
   // TODO: Add functionality where the user can change the window state (e.g. height, width, maximization).
-  mainWindow.maximize()
+  browserWindow.maximize()
 
   // TODO: Figure out how to set custom icon for the application.
   // mainWindow.setIcon(path.join(__dirname, 'assets', 'peepo_happy.webp'))
 
   // and load the index.html of the app.
-  await mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
+  await browserWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
-  // Open the DevTools.
-  // TODO: This should only happen in development mode.
-  mainWindow.webContents.openDevTools()
+  if (electronConfig.isDevelopment) {
+    browserWindow.webContents.openDevTools()
+  }
 }
 
 // This method will be called when Electron has finished
@@ -70,12 +70,12 @@ app.whenReady().then(async () => {
   })
 
   ipcMain.handle(CHANNELS.DIRECTORY_PICKER_OPEN, async (event) => {
-    const win = BrowserWindow.fromWebContents(event.sender)
-    if (win === null) {
+    const browserWindowFromWebContents = BrowserWindow.fromWebContents(event.sender)
+    if (browserWindowFromWebContents === null) {
       throw new Error(`Browser window could not be retrieved from web contents.`)
     }
 
-    return dialog.showOpenDialog(win, {
+    return dialog.showOpenDialog(browserWindowFromWebContents, {
       properties: ['openDirectory'],
     })
   })
@@ -109,11 +109,9 @@ app.whenReady().then(async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (electronConfig.isMacOS) {
-    return
+  if (electronConfig.isLinux || electronConfig.isWindows) {
+    app.quit()
   }
-
-  app.quit()
 })
 
 app.on('activate', async () => {
@@ -128,7 +126,7 @@ process.on('uncaughtException', (error) => {
   console.error(`Uncaught exception occurred.`)
   console.error(error)
 
-  if (process.platform !== 'darwin') {
+  if (electronConfig.isLinux || electronConfig.isWindows) {
     app.quit()
   }
 })

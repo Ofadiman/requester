@@ -41,6 +41,14 @@ class ElectronConfig {
   public get isMacOS(): boolean {
     return process.platform === 'darwin'
   }
+
+  public get isLinux(): boolean {
+    return process.platform === 'linux'
+  }
+
+  public get isWindows(): boolean {
+    return process.platform === 'win32'
+  }
 }
 
 export const electronConfig = new ElectronConfig()
