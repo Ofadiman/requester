@@ -15,7 +15,7 @@ if (htmlRoot === null) {
 }
 const root = ReactDOMClient.createRoot(htmlRoot)
 
-window.electron.initializeReduxStore().then((reduxStore: RootState) => {
+window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) => {
   console.log(
     '\x1b[33m\x1b[40m%s\x1b[0m',
     `\n===== [DEBUG] ===== Initialized redux store from electron ===== [DEBUG] =====`,

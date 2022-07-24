@@ -8,14 +8,10 @@ const rootReducer = combineReducers({
 })
 
 // TODO: Check which middlewares and enhancers I can use to improve the application or developer experience.
-export const configureAppStore = (preloadedState: RootState) => {
-  // TODO: Preload state on application initialization.
+export const configureAppStore = (preloadedState: RootState | undefined) => {
   const store = configureStore({
     reducer: rootReducer,
-    // TODO: I cannot simply pass `preloadedState` here because state inferred from root reducer and state expected by the `preloadedState` key have some different properties that are presumably used for type inference.
-    preloadedState: {
-      workspacesSlice: preloadedState.workspacesSlice,
-    },
+    preloadedState: preloadedState ?? {},
   })
 
   // TODO: Hot module replacement is not working for unknown reasons.

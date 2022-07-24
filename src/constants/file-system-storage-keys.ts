@@ -1,0 +1,3 @@
+export enum FILE_SYSTEM_STORAGE_KEYS {
+  REDUX_STORE = 'REDUX_STORE',
+}

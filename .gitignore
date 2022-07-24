@@ -2,10 +2,11 @@
 *
 
 # Include the following directories.
-!src
-!src/**
 !assets
 !assets/**
+!src
+!src/**
+!userData
 
 # Include the following files.
 !.gitignore
@@ -13,6 +14,7 @@
 !package.json
 !readme.md
 !tsconfig.json
+!userData/.gitkeep
 !webpack.main.config.js
 !webpack.plugins.js
 !webpack.renderer.config.js
