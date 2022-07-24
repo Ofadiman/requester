@@ -13,17 +13,29 @@ import { RootState } from './redux/store'
  * 3. The combination of `someWindow.webContents.send` and `ipcRenderer.on` allows a one-way communication initiated from the main process and handled by the renderer process. Optionally, it is possible to send a reply to the main process (via the `event.sender.send` API) and handle it via `ipcMain.on` API. (https://www.electronjs.org/docs/latest/tutorial/ipc#pattern-3-main-to-renderer)
  */
 
-// TODO: I want to probably rename the `api` to something like `electron` or `preload`.
-// TODO: I want to make APIs exposed on `window` object type safe (https://www.electronjs.org/docs/latest/tutorial/context-isolation#usage-with-typescript).
-contextBridge.exposeInMainWorld('api', {
-  initializeReduxStore: () => {
+const PRELOADED = {
+  initializeReduxStore: async () => {
     return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.INITIALIZE_REDUX_STORE)
   },
-  openDirectoryPicker: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.OPEN_DIRECTORY_PICKER),
-  resetStore: () => ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESET_STORE),
-  chooseWorkspace: (args: Workspace) =>
-    ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.CHOOSE_WORKSPACE, args),
-  persistReduxStore: (args: RootState) => {
+  openDirectoryPicker: async () => {
+    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.OPEN_DIRECTORY_PICKER)
+  },
+  resetStore: async () => {
+    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.RESET_STORE)
+  },
+  chooseWorkspace: async (args: Workspace) => {
+    return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.CHOOSE_WORKSPACE, args)
+  },
+  persistReduxStore: async (args: RootState) => {
     return ipcRenderer.invoke(CONTEXT_BRIDGE_EVENT_NAMES.PERSIST_REDUX_STORE, args)
   },
-})
+} as const
+
+// I can't declare a constant (eg. `const EXPOSED_KEY = 'electron'`) and use it for typing the API in the window object, because the editor doesn't show autocomplete for preloaded functions.
+contextBridge.exposeInMainWorld('electron', PRELOADED)
+
+declare global {
+  interface Window {
+    electron: typeof PRELOADED
+  }
+}
