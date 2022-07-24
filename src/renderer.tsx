@@ -1,14 +1,15 @@
+import './dayjs.bootstrap'
 import * as React from 'react'
-import { StrictMode } from 'react'
 import * as ReactDOMClient from 'react-dom/client'
 import { Button, CssBaseline } from '@mui/material'
-import { Provider } from 'react-redux'
-import { SettingsView } from './settings/settings.view'
-import { PokemonView } from './pokemon/pokemon.view'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { HomeView } from './home/home.view'
-import { configureAppStore, RootState } from './redux/store'
 import { MainView } from './main/main.view'
+import { PokemonView } from './pokemon/pokemon.view'
+import { Provider } from 'react-redux'
+import { SettingsView } from './settings/settings.view'
+import { StrictMode } from 'react'
+import { configureAppStore, RootState } from './redux/store'
 
 const root = ReactDOMClient.createRoot(document.getElementById('react-app'))
 

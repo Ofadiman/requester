@@ -8,7 +8,6 @@
 !assets/**
 
 # Include the following files.
-!.eslintrc.json
 !.gitignore
 !.prettierrc.js
 !package.json
