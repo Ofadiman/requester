@@ -1,5 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+
+export const workspacesAdapter = createEntityAdapter<Workspace>()
+const initialState = workspacesAdapter.getInitialState()
+
+export const workspacesSlice = createSlice({
+  name: 'workspacesSlice',
+  initialState,
+  reducers: {
+    addOne: workspacesAdapter.addOne,
+  },
+})
 
 export type Workspace = {
   path: string
@@ -7,20 +17,4 @@ export type Workspace = {
   id: string
 }
 
-export type WorkspacesSliceState = {
-  workspaces: Workspace[]
-}
-
-const INITIAL_WORKSPACES_SLICE_STATE: WorkspacesSliceState = {
-  workspaces: [],
-}
-
-export const workspacesSlice = createSlice({
-  name: 'workspaces',
-  initialState: INITIAL_WORKSPACES_SLICE_STATE,
-  reducers: {
-    add: (state: WorkspacesSliceState, action: PayloadAction<Workspace>) => {
-      state.workspaces.push(action.payload)
-    },
-  },
-})
+export type WorkspaceSliceState = typeof initialState

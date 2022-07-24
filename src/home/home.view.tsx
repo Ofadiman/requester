@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles'
 import { AddRounded, CloseRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
 import { useTypedDispatch, useTypedSelector } from '../redux/store'
-import { Workspace, workspacesSlice } from '../redux/workspaces/workspaces.slice'
+import { Workspace, workspacesAdapter, workspacesSlice } from '../redux/workspaces/workspaces.slice'
 import { uuidFactory } from '../utils/uuid.factory'
 import { useNavigate } from 'react-router-dom'
 
@@ -17,7 +17,9 @@ const styles: SxProps<Theme> = {
 
 export const HomeView: FC = () => {
   const dispatch = useTypedDispatch()
-  const workspaces = useTypedSelector((state) => state.workspaces.workspaces)
+  const workspaces = useTypedSelector((state) =>
+    workspacesAdapter.getSelectors().selectAll(state.workspacesSlice),
+  )
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -47,7 +49,7 @@ export const HomeView: FC = () => {
       name: `Some name here ${Math.random()}`,
     }
 
-    dispatch(workspacesSlice.actions.add(pickedWorkspace))
+    dispatch(workspacesSlice.actions.addOne(pickedWorkspace))
     const workspaces = await (window as any).api.chooseWorkspace(pickedWorkspace)
     console.log(
       '\x1b[33m\x1b[40m%s\x1b[0m',

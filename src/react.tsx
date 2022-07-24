@@ -8,7 +8,7 @@ import { PokemonView } from './pokemon/pokemon.view'
 import { CounterView } from './counter/counter.view'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { HomeView } from './home/home.view'
-import { store } from './redux/store'
+import { configureAppStore } from './redux/store'
 import { MainView } from './main/main.view'
 
 const root = ReactDOMClient.createRoot(document.getElementById('react-app'))
@@ -16,7 +16,7 @@ const root = ReactDOMClient.createRoot(document.getElementById('react-app'))
 root.render(
   <StrictMode>
     <CssBaseline />
-    <Provider store={store}>
+    <Provider store={configureAppStore({})}>
       <Button
         onClick={() => {
           void (window as any).api.resetStore()
