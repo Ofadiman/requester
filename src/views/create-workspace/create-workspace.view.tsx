@@ -50,7 +50,7 @@ export const HomeView: FC = () => {
     }
 
     dispatch(workspacesSlice.actions.addOne(pickedWorkspace))
-    navigate('/main', { replace: true })
+    navigate('/http-requests', { replace: true })
   }
 
   const handleSnackbarClose = (_event: React.SyntheticEvent | Event, reason?: string) => {

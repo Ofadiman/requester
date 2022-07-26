@@ -3,8 +3,8 @@ import * as React from 'react'
 import * as ReactDOMClient from 'react-dom/client'
 import { Button, CssBaseline } from '@mui/material'
 import { HashRouter, Route, Routes } from 'react-router-dom'
-import { HomeView } from './views/home/home.view'
-import { MainView } from './views/main/main.view'
+import { HomeView } from './views/create-workspace/create-workspace.view'
+import { HttpRequestsView } from './views/http-requests/http-requests.view'
 import { Provider } from 'react-redux'
 import { StrictMode } from 'react'
 import { configureAppStore, RootState } from './redux/store'
@@ -56,7 +56,7 @@ window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) 
         <HashRouter>
           <Routes>
             <Route path={`/`} element={<HomeView />} />
-            <Route path={`/main`} element={<MainView />} />
+            <Route path={`/main`} element={<HttpRequestsView />} />
           </Routes>
         </HashRouter>
       </Provider>
