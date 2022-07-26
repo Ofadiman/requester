@@ -4,11 +4,15 @@ import { SxProps } from '@mui/system'
 import { Theme } from '@mui/material/styles'
 import { AddRounded, CloseRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
-import { useTypedSelector } from '../redux/store'
-import { Workspace, workspacesAdapter, workspacesSlice } from '../redux/workspaces/workspaces.slice'
-import { uuidFactory } from '../utils/uuid.factory'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { useTypedSelector } from '../../redux/store'
+import {
+  Workspace,
+  workspacesAdapter,
+  workspacesSlice,
+} from '../../redux/workspaces/workspaces.slice'
+import { uuidFactory } from '../../utils/uuid.factory'
 
 const styles: SxProps<Theme> = {
   width: '100vw',
