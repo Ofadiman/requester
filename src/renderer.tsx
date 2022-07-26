@@ -1,17 +1,18 @@
 import './dayjs.bootstrap'
 import * as React from 'react'
+import { StrictMode } from 'react'
 import * as ReactDOMClient from 'react-dom/client'
-import { Button, CssBaseline } from '@mui/material'
+import { CssBaseline } from '@mui/material'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { HomeView } from './views/create-workspace/create-workspace.view'
 import { HttpRequestsView } from './views/http-requests/http-requests.view'
 import { Provider } from 'react-redux'
-import { StrictMode } from 'react'
 import { configureAppStore, RootState } from './redux/store'
+import { IpcRegistrator } from './containers/ipc-registrator/ipc-registrator.container'
 
 const htmlRoot = document.getElementById('react-app')
 if (htmlRoot === null) {
-  throw new Error(`HTML element with id "react-app" not found in "index.html" file`)
+  throw new Error(`HTML element with id "react-app" not found in "index.html" file.`)
 }
 const root = ReactDOMClient.createRoot(htmlRoot)
 
@@ -46,14 +47,8 @@ window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) 
     <StrictMode>
       <CssBaseline />
       <Provider store={store}>
-        <Button
-          onClick={() => {
-            void window.electron.clearReduxStore()
-          }}
-        >
-          Reset store
-        </Button>
         <HashRouter>
+          <IpcRegistrator />
           <Routes>
             <Route path={`/`} element={<HomeView />} />
             <Route path={`/main`} element={<HttpRequestsView />} />

@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { CHANNELS } from './constants/channels'
 import { RootState } from './redux/store'
+import { IpcRendererEvent } from 'electron'
 
 /**
  * This script will be run in the context of the renderer process and will be executed before the web content starts loading.
@@ -24,6 +25,18 @@ const PRELOADED = {
   },
   persistReduxStore: async (args: RootState) => {
     return ipcRenderer.invoke(CHANNELS.REDUX_STORE_PERSIST, args)
+  },
+  registerIpcMainEventHandler: (
+    channel: CHANNELS,
+    callback: (event: IpcRendererEvent, ...args: unknown[]) => void,
+  ) => {
+    ipcRenderer.on(channel, callback)
+  },
+  removeIpcMainEventHandler: (
+    channel: CHANNELS,
+    callback: (event: IpcRendererEvent, ...args: unknown[]) => void,
+  ) => {
+    ipcRenderer.removeListener(channel, callback)
   },
 } as const
 

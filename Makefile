@@ -1,5 +1,6 @@
 # Script used to run the application locally in development mode.
 local:
+	clear && \
 	rm -rf .webpack && \
 	export NODE_ENV=development && \
 	export LOG_LEVEL=debug && \
