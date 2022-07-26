@@ -11,6 +11,7 @@
 # Include the following files.
 !.gitignore
 !.prettierrc.js
+!Makefile
 !package.json
 !readme.md
 !tsconfig.json

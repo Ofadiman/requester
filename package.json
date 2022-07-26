@@ -4,12 +4,6 @@
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
-  "scripts": {
-    "dev": "rm -rf .webpack && export NODE_ENV=\"development\" && export LOG_LEVEL=\"debug\" && electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish"
-  },
   "keywords": [],
   "author": {
     "name": "ofadiman",
