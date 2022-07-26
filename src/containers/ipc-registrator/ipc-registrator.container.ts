@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react'
 import { CHANNELS } from '../../constants/channels'
+import { Logger } from '../../utils/logger'
+
+const logger = new Logger(`ipc registrator`)
 
 const clearReduxStoreIpc = async (): Promise<void> => {
   /**
@@ -17,14 +20,20 @@ const clearReduxStoreIpc = async (): Promise<void> => {
  */
 export const IpcRegistrator: React.FC = () => {
   useEffect(() => {
-    console.log(`Attaching event listener for ${clearReduxStoreIpc.name}`)
+    logger.info(
+      `Registering event listener on channel "${CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS}" for function named "${clearReduxStoreIpc.name}".`,
+    )
+
     window.electron.registerIpcMainEventHandler(
       CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS,
       clearReduxStoreIpc,
     )
 
     return () => {
-      console.log(`Clearing event listener for ${clearReduxStoreIpc.name}`)
+      logger.info(
+        `Removing event listener on channel "${CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS}" for function named "${clearReduxStoreIpc.name}".`,
+      )
+
       window.electron.removeIpcMainEventHandler(
         CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS,
         clearReduxStoreIpc,

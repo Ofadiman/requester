@@ -9,6 +9,9 @@ import { HttpRequestsView } from './views/http-requests/http-requests.view'
 import { Provider } from 'react-redux'
 import { configureAppStore, RootState } from './redux/store'
 import { IpcRegistrator } from './containers/ipc-registrator/ipc-registrator.container'
+import { Logger } from './utils/logger'
+
+const logger = new Logger('renderer')
 
 const htmlRoot = document.getElementById('react-app')
 if (htmlRoot === null) {
@@ -17,29 +20,17 @@ if (htmlRoot === null) {
 const root = ReactDOMClient.createRoot(htmlRoot)
 
 window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) => {
-  console.log(
-    '\x1b[33m\x1b[40m%s\x1b[0m',
-    `\n===== [DEBUG] ===== Initialized redux store from electron ===== [DEBUG] =====`,
-  )
-  console.log(reduxStore)
-  console.log(
-    '\x1b[33m\x1b[40m%s\x1b[0m',
-    `===== [DEBUG] ===== Initialized redux store from electron ===== [DEBUG] =====\n`,
-  )
+  logger.info(`Redux store`, reduxStore)
 
   const store = configureAppStore(reduxStore)
 
   store.subscribe(() => {
     const currentReduxStore = store.getState()
     void window.electron.persistReduxStore(currentReduxStore)
-    console.log(
-      '\x1b[33m\x1b[40m%s\x1b[0m',
-      `\n===== [DEBUG] ===== Debugging changed redux state ===== [DEBUG] =====`,
-    )
-    console.log(currentReduxStore)
-    console.log(
-      '\x1b[33m\x1b[40m%s\x1b[0m',
-      `===== [DEBUG] ===== Debugging changed redux state ===== [DEBUG] =====\n`,
+
+    logger.info(
+      `This is the redux store immediately after an action is handled by a reducer.`,
+      currentReduxStore,
     )
   })
 
