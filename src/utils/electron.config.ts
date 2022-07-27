@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { NODE_ENV } from '../constants/node-env'
 
 enum ENVIRONMENT_VARIABLES {
   LOG_LEVEL = 'LOG_LEVEL',
@@ -7,7 +8,7 @@ enum ENVIRONMENT_VARIABLES {
 
 const electronConfigSchema = z
   .object({
-    [ENVIRONMENT_VARIABLES.NODE_ENV]: z.string(),
+    [ENVIRONMENT_VARIABLES.NODE_ENV]: z.nativeEnum(NODE_ENV),
     [ENVIRONMENT_VARIABLES.LOG_LEVEL]: z.string(),
   })
   .strict()
@@ -35,7 +36,7 @@ class ElectronConfig {
   }
 
   public get isDevelopment(): boolean {
-    return this.internalConfig.NODE_ENV === 'development'
+    return this.internalConfig.NODE_ENV === NODE_ENV.DEVELOPMENT
   }
 
   public get isMacOS(): boolean {
