@@ -3,8 +3,8 @@ import * as React from 'react'
 import { StrictMode } from 'react'
 import * as ReactDOMClient from 'react-dom/client'
 import { CssBaseline } from '@mui/material'
-import { HashRouter, Route, Routes } from 'react-router-dom'
-import { HomeView } from './views/create-workspace/create-workspace.view'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { CreateWorkspaceView } from './views/create-workspace/create-workspace.view'
 import { HttpRequestsView } from './views/http-requests/http-requests.view'
 import { Provider } from 'react-redux'
 import { configureAppStore, RootState } from './redux/store'
@@ -38,13 +38,13 @@ window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) 
     <StrictMode>
       <CssBaseline />
       <Provider store={store}>
-        <HashRouter>
+        <MemoryRouter initialEntries={['/http-requests']}>
           <IpcRegistrator />
           <Routes>
-            <Route path={`/`} element={<HomeView />} />
-            <Route path={`/main`} element={<HttpRequestsView />} />
+            <Route path={`/http-requests`} element={<HttpRequestsView />} />
+            <Route path={`/create-workspace`} element={<CreateWorkspaceView />} />
           </Routes>
-        </HashRouter>
+        </MemoryRouter>
       </Provider>
     </StrictMode>,
   )

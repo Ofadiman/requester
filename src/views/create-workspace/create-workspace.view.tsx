@@ -6,13 +6,9 @@ import { AddRounded, CloseRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { useTypedSelector } from '../../redux/store'
-import {
-  Workspace,
-  workspacesAdapter,
-  workspacesSlice,
-} from '../../redux/workspaces/workspaces.slice'
+import { Workspace, workspacesSlice } from '../../redux/workspaces/workspaces.slice'
 import { uuidFactory } from '../../utils/uuid.factory'
+import { typeGuards } from '../../utils/type-guards'
 
 const styles: SxProps<Theme> = {
   width: '100vw',
@@ -20,11 +16,8 @@ const styles: SxProps<Theme> = {
   display: 'grid',
 }
 
-export const HomeView: FC = () => {
+export const CreateWorkspaceView: FC = () => {
   const dispatch = useDispatch()
-  const workspaces = useTypedSelector((state) =>
-    workspacesAdapter.getSelectors().selectAll(state.workspacesSlice),
-  )
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -39,7 +32,7 @@ export const HomeView: FC = () => {
 
     const [workspacePath] = result.filePaths
 
-    if (workspacePath === undefined) {
+    if (typeGuards.isUndefined(workspacePath)) {
       throw new Error(`Workspace path cannot be undefined.`)
     }
 
@@ -64,15 +57,6 @@ export const HomeView: FC = () => {
 
   return (
     <Box sx={styles}>
-      {workspaces.map((workspace) => {
-        return (
-          <Box>
-            Id: {workspace.id}
-            Name: {workspace.name}
-            Path: {workspace.path}
-          </Box>
-        )
-      })}
       <Button
         variant={'contained'}
         sx={{
