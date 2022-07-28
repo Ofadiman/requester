@@ -3,6 +3,11 @@ import { MenuItem, Menu, app, BrowserWindow, dialog, ipcMain, session } from 'el
 import { CHANNELS } from './constants/channels'
 import { RootState } from './redux/store'
 import { electronConfig } from './utils/electron.config'
+import {
+  default as installExtensions,
+  REDUX_DEVTOOLS,
+  REACT_DEVELOPER_TOOLS,
+} from 'electron-devtools-installer'
 import * as path from 'path'
 import Store from 'electron-store'
 import { FILE_SYSTEM_STORAGE_KEYS } from './constants/file-system-storage-keys'
@@ -77,6 +82,8 @@ const createWindow = async (): Promise<void> => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
+  await installExtensions([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
+
   // Session modification logic must occur before window is created.
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
