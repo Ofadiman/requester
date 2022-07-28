@@ -29,13 +29,13 @@ const PRELOADED = {
   },
   registerIpcMainEventHandler: (
     channel: CHANNELS,
-    callback: (event: IpcRendererEvent, ...args: unknown[]) => void,
+    callback: (event: IpcRendererEvent, ...args: any[]) => void,
   ) => {
     ipcRenderer.on(channel, callback)
   },
   removeIpcMainEventHandler: (
     channel: CHANNELS,
-    callback: (event: IpcRendererEvent, ...args: unknown[]) => void,
+    callback: (event: IpcRendererEvent, ...args: any[]) => void,
   ) => {
     ipcRenderer.removeListener(channel, callback)
   },

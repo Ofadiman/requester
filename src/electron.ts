@@ -57,6 +57,18 @@ const createWindow = async (): Promise<void> => {
               browserWindow.webContents.send(CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS)
             },
           },
+          {
+            label: 'Navigate to http requests view',
+            click: () => {
+              browserWindow.webContents.send(CHANNELS.NAVIGATION, { to: '/http-requests' })
+            },
+          },
+          {
+            label: 'Navigate to create workspace view',
+            click: () => {
+              browserWindow.webContents.send(CHANNELS.NAVIGATION, { to: '/create-workspace' })
+            },
+          },
         ],
       }),
     )

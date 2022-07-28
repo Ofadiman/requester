@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { CHANNELS } from '../../constants/channels'
-import { Logger } from '../../utils/logger'
-
-const logger = new Logger(`ipc registrator`)
+import { useNavigate } from 'react-router-dom'
+import { NavigateFunction } from 'react-router/lib/hooks'
+import { IpcRendererEvent } from 'electron'
 
 const clearReduxStoreIpc = async (): Promise<void> => {
   /**
@@ -11,6 +11,12 @@ const clearReduxStoreIpc = async (): Promise<void> => {
   await window.electron.clearReduxStore()
 }
 
+const createNavigationFunction = (navigate: NavigateFunction) => {
+  // TODO: Add better typings to arguments received from the main process.
+  return (_event: IpcRendererEvent, args: { to: string }) => {
+    navigate(args.to)
+  }
+}
 /**
  * In order to be able to make changes to the react application from the main process via IPC events I have to register event handlers somewhere in the react tree, where hooks can be used and all contexts are available.
  *
@@ -19,25 +25,24 @@ const clearReduxStoreIpc = async (): Promise<void> => {
  * - Change current route via `navigate` function returned from `useNavigate` hook.
  */
 export const IpcRegistrator: React.FC = () => {
-  useEffect(() => {
-    logger.info(
-      `Registering event listener on channel "${CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS}" for function named "${clearReduxStoreIpc.name}".`,
-    )
+  const navigate = useNavigate()
+  const navigateIpc = createNavigationFunction(navigate)
 
+  useEffect(() => {
     window.electron.registerIpcMainEventHandler(
       CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS,
       clearReduxStoreIpc,
     )
 
-    return () => {
-      logger.info(
-        `Removing event listener on channel "${CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS}" for function named "${clearReduxStoreIpc.name}".`,
-      )
+    window.electron.registerIpcMainEventHandler(CHANNELS.NAVIGATION, navigateIpc)
 
+    return () => {
       window.electron.removeIpcMainEventHandler(
         CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS,
         clearReduxStoreIpc,
       )
+
+      window.electron.removeIpcMainEventHandler(CHANNELS.NAVIGATION, navigateIpc)
     }
   }, [])
 
