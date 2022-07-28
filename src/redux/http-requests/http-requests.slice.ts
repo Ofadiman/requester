@@ -66,5 +66,8 @@ export const httpRequestsSlice = createSlice({
         },
       })
     },
+    changeCurrentRequest: (state, action: PayloadAction<{ id: string }>) => {
+      state.currentId = action.payload.id
+    },
   },
 })

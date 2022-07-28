@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Grid, Paper } from '@mui/material'
+import { Box, Button, Grid } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import {
   HTTP_REQUEST_STATUSES,
@@ -104,9 +104,14 @@ export const HttpRequestsView: React.FC = () => {
           {httpRequests.map((httpRequest) => {
             return (
               <Grid item flexShrink={1} key={httpRequest.id}>
-                <Paper>
+                <Button
+                  fullWidth
+                  onClick={() => {
+                    dispatch(httpRequestsSlice.actions.changeCurrentRequest({ id: httpRequest.id }))
+                  }}
+                >
                   {httpRequest.id} {httpRequest.name}
-                </Paper>
+                </Button>
               </Grid>
             )
           })}
