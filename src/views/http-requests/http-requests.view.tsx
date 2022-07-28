@@ -1,16 +1,22 @@
 import React from 'react'
 import { Box, Button, Grid, Paper } from '@mui/material'
 import { useDispatch } from 'react-redux'
-import { httpRequestsAdapter, httpRequestsSlice } from '../../redux/requests/requests.slice'
+import {
+  HTTP_REQUEST_STATUSES,
+  httpRequestsAdapter,
+  httpRequestsSlice,
+} from '../../redux/http-requests/http-requests.slice'
 import { uuidFactory } from '../../utils/uuid.factory'
 import { useTypedSelector } from '../../redux/store'
 import { HTTP_METHODS } from '../../constants/http-methods'
+import { typeGuards } from '../../utils/type-guards'
 
 export const HttpRequestsView: React.FC = () => {
   const dispatch = useDispatch()
   const httpRequests = useTypedSelector((state) =>
     httpRequestsAdapter.getSelectors().selectAll(state.httpRequests),
   )
+  // TODO: Consider moving this to a separate file.
   const currentHttpRequest = useTypedSelector((state) => {
     if (state.httpRequests.currentId === null) {
       return
@@ -32,8 +38,19 @@ export const HttpRequestsView: React.FC = () => {
         body: {},
         query: {},
         url: '',
+        status: HTTP_REQUEST_STATUSES.NEW,
+        response: {},
       }),
     )
+  }
+
+  const handleHttpRequestStart = () => {
+    // TODO: Handle situation where http request was not found (e.g. store got corrupted).
+    if (typeGuards.isUndefined(currentHttpRequest)) {
+      return
+    }
+
+    dispatch(httpRequestsSlice.actions.httpRequestPending({ id: currentHttpRequest.id }))
   }
 
   return (
@@ -93,6 +110,7 @@ export const HttpRequestsView: React.FC = () => {
         <Grid container item xs={10} sx={{ backgroundColor: 'hsla(120,100%,50%,0.5)' }}>
           <Grid item>
             <Box>{JSON.stringify(currentHttpRequest)}</Box>
+            <Button onClick={handleHttpRequestStart}>Dispatch fetch start action</Button>
           </Grid>
         </Grid>
       </Grid>

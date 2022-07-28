@@ -10,6 +10,7 @@ import { Provider } from 'react-redux'
 import { configureAppStore, RootState } from './redux/store'
 import { IpcRegistrator } from './containers/ipc-registrator/ipc-registrator.container'
 import { Logger } from './utils/logger'
+import { rootSaga } from './redux/root.saga'
 
 const logger = new Logger('renderer')
 
@@ -22,8 +23,10 @@ const root = ReactDOMClient.createRoot(htmlRoot)
 window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) => {
   logger.info(`Redux store`, reduxStore)
 
-  const store = configureAppStore(reduxStore)
+  const { store, sagaMiddleware } = configureAppStore(reduxStore)
 
+  // COMMENT: It might be possible to use the `redux-persist` library, because from what I've read in the documentation after creating this code is that it gives the option to pass a custom storage engine.
+  // TODO: Create custom storage engine for `redux-persist` library.
   store.subscribe(() => {
     const currentReduxStore = store.getState()
     void window.electron.persistReduxStore(currentReduxStore)
@@ -33,6 +36,8 @@ window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) 
       currentReduxStore,
     )
   })
+
+  sagaMiddleware.run(rootSaga)
 
   root.render(
     <StrictMode>

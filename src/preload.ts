@@ -38,6 +38,9 @@ const PRELOADED = {
   ) => {
     ipcRenderer.removeListener(channel, callback)
   },
+  makeRequest: async (args: any) => {
+    return ipcRenderer.invoke(CHANNELS.HTTP_MAKE_REQUEST, args)
+  },
 } as const
 
 // I can't declare a constant (eg. `const EXPOSED_KEY = 'electron'`) and use it for typing the API in the window object, because the editor doesn't show autocomplete for preloaded functions.
