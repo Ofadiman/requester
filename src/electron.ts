@@ -1,5 +1,5 @@
 import './dayjs.bootstrap'
-import { MenuItem, Menu, app, BrowserWindow, dialog, ipcMain, session } from 'electron'
+import { MenuItem, Menu, app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { CHANNELS } from './constants/channels'
 import { RootState } from './redux/store'
 import { electronConfig } from './utils/electron.config'
@@ -83,20 +83,6 @@ const createWindow = async (): Promise<void> => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   await installExtensions([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
-
-  // Session modification logic must occur before window is created.
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        // TODO: Review the electron security documentation again and find out what exactly this header is being set up for.
-        // I need this line so that I can send HTTP requests from React application to any URL.
-        // There is a chance that it will not be needed in production mode.
-        // It is possible that this configuration of Content-Security-Policy header will cause problems with the security of the application, but for now I don't understand how it works.
-        'Content-Security-Policy': ['*'],
-      },
-    })
-  })
 
   const logger = new Logger('ipc main')
 
