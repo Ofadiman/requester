@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { CHANNELS } from './constants/channels'
 import { RootState } from './redux/store'
 import { IpcRendererEvent } from 'electron'
+import { AxiosResponse } from 'axios'
 
 /**
  * This script will be run in the context of the renderer process and will be executed before the web content starts loading.
@@ -38,7 +39,9 @@ const PRELOADED = {
   ) => {
     ipcRenderer.removeListener(channel, callback)
   },
-  makeRequest: async (args: any) => {
+  makeRequest: async (
+    args: unknown,
+  ): Promise<Pick<AxiosResponse, 'data' | 'status' | 'headers'>> => {
     return ipcRenderer.invoke(CHANNELS.HTTP_MAKE_REQUEST, args)
   },
 } as const

@@ -1,5 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { HTTP_METHODS } from '../../constants/http-methods'
+import { AxiosResponse } from 'axios'
 
 export enum HTTP_REQUEST_STATUSES {
   NEW = 'NEW',
@@ -16,7 +17,7 @@ export type HttpRequest = {
   body: Record<string, unknown>
   path: Record<string, unknown>
   query: Record<string, unknown>
-  response: any
+  requestResult: Pick<AxiosResponse, 'data' | 'status' | 'headers'>
   status: HTTP_REQUEST_STATUSES
 }
 
@@ -42,11 +43,18 @@ export const httpRequestsSlice = createSlice({
         },
       })
     },
-    httpRequestFulfilled: (state, action: PayloadAction<{ id: string }>) => {
+    httpRequestFulfilled: (
+      state,
+      action: PayloadAction<{
+        id: string
+        requestResult: HttpRequest['requestResult']
+      }>,
+    ) => {
       httpRequestsAdapter.updateOne(state, {
         id: action.payload.id,
         changes: {
           status: HTTP_REQUEST_STATUSES.FULFILLED,
+          requestResult: action.payload.requestResult,
         },
       })
     },

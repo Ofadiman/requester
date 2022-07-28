@@ -1,5 +1,5 @@
-import { call, select } from 'typed-redux-saga'
-import { httpRequestsAdapter } from '../http-requests.slice'
+import { call, put, select } from 'typed-redux-saga'
+import { httpRequestsAdapter, httpRequestsSlice } from '../http-requests.slice'
 import { RootState } from '../../store'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { typeGuards } from '../../../utils/type-guards'
@@ -17,7 +17,13 @@ export function* makeRequestSaga(action: PayloadAction<{ id: string }>) {
     logger.info('Http request', httpRequest)
 
     const response = yield* call(window.electron.makeRequest, httpRequest)
-    logger.info(response)
+    logger.info('Response in saga', response)
+    yield* put(
+      httpRequestsSlice.actions.httpRequestFulfilled({
+        id: action.payload.id,
+        requestResult: response,
+      }),
+    )
   } else {
     // TODO: I want to show some kind of notification here, that something went wrong.
     yield* call(console.log, 'Http request not found')

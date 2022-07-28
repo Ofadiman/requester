@@ -39,7 +39,11 @@ export const HttpRequestsView: React.FC = () => {
         query: {},
         url: '',
         status: HTTP_REQUEST_STATUSES.NEW,
-        response: {},
+        requestResult: {
+          data: {},
+          status: 0,
+          headers: {},
+        },
       }),
     )
   }
@@ -110,7 +114,9 @@ export const HttpRequestsView: React.FC = () => {
         <Grid container item xs={10} sx={{ backgroundColor: 'hsla(120,100%,50%,0.5)' }}>
           <Grid item>
             <Box>{JSON.stringify(currentHttpRequest)}</Box>
-            <Button onClick={handleHttpRequestStart}>Dispatch fetch start action</Button>
+            <Button variant={'contained'} onClick={handleHttpRequestStart}>
+              Dispatch fetch start action
+            </Button>
           </Grid>
         </Grid>
       </Grid>
