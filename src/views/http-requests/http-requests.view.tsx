@@ -30,7 +30,7 @@ export const HttpRequestsView: React.FC = () => {
   const handleAddHttpRequest = () => {
     // TODO: I want to create an entity factory later.
     dispatch(
-      httpRequestsSlice.actions.addOne({
+      httpRequestsSlice.actions.createHttpRequest({
         id: uuidFactory.generateVersion4(),
         path: {},
         name: 'New request',

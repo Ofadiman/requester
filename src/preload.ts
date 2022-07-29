@@ -4,6 +4,7 @@ import { RootState } from './redux/store'
 import { IpcRendererEvent } from 'electron'
 import { AxiosResponse } from 'axios'
 import { Workspace } from './redux/workspaces/workspaces.slice'
+import { HttpRequest } from './redux/http-requests/http-requests.slice'
 
 /**
  * This script will be run in the context of the renderer process and will be executed before the web content starts loading.
@@ -48,7 +49,12 @@ const PRELOADED = {
   createWorkspaceDirectory: async (args: Workspace): Promise<void> => {
     return ipcRenderer.invoke(CHANNELS.WORKSPACES_CREATE_DIRECTORY, args)
   },
+  createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> => {
+    return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CREATE, args)
+  },
 } as const
+
+export type CreateHttpRequestFileArgs = { httpRequest: HttpRequest; workspace: Workspace }
 
 // I can't declare a constant (eg. `const EXPOSED_KEY = 'electron'`) and use it for typing the API in the window object, because the editor doesn't show autocomplete for preloaded functions.
 contextBridge.exposeInMainWorld('electron', PRELOADED)

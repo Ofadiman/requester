@@ -31,7 +31,7 @@ export const httpRequestsSlice = createSlice({
   name: 'httpRequests',
   initialState,
   reducers: {
-    addOne: (state, action: PayloadAction<HttpRequest>) => {
+    createHttpRequest: (state, action: PayloadAction<HttpRequest>) => {
       httpRequestsAdapter.addOne(state, action)
       state.currentId = action.payload.id
     },
