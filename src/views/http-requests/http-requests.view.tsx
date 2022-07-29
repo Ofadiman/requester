@@ -41,6 +41,7 @@ export const HttpRequestsView: React.FC = () => {
         status: HTTP_REQUEST_STATUSES.NEW,
         requestResult: {
           data: {},
+          // TODO: I would probably like to set `null` as the default value here.
           status: 0,
           headers: {},
         },

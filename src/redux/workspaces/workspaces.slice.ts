@@ -1,13 +1,18 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export const workspacesAdapter = createEntityAdapter<Workspace>()
-const initialState = workspacesAdapter.getInitialState()
+const initialState = workspacesAdapter.getInitialState({
+  currentId: null as string | null,
+})
 
 export const workspacesSlice = createSlice({
   name: 'workspacesSlice',
   initialState,
   reducers: {
-    addOne: workspacesAdapter.addOne,
+    addOne: (state, action: PayloadAction<Workspace>) => {
+      workspacesAdapter.addOne(state, action.payload)
+      state.currentId = action.payload.id
+    },
     updateOne: workspacesAdapter.updateOne,
   },
 })
