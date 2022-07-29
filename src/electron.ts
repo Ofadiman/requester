@@ -152,16 +152,6 @@ app.whenReady().then(async () => {
   )
 
   await createWindow()
-
-  // TODO: Figure out how to load browser extensions such as React/Redux dev tools.
-  // if (isDev) {
-  //   await session.defaultSession
-  //     .loadExtension(
-  //       path.join(__dirname, `../userData/extensions/react-dev-tools`), // This is the directory where loaded extensions should live.
-  //     )
-  //     .then((name) => console.log(name))
-  //     .catch((err) => console.log(err))
-  // }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
