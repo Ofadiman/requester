@@ -3,6 +3,7 @@ import { CHANNELS } from './constants/channels'
 import { RootState } from './redux/store'
 import { IpcRendererEvent } from 'electron'
 import { AxiosResponse } from 'axios'
+import { Workspace } from './redux/workspaces/workspaces.slice'
 
 /**
  * This script will be run in the context of the renderer process and will be executed before the web content starts loading.
@@ -43,6 +44,9 @@ const PRELOADED = {
     args: unknown,
   ): Promise<Pick<AxiosResponse, 'data' | 'status' | 'headers'>> => {
     return ipcRenderer.invoke(CHANNELS.HTTP_MAKE_REQUEST, args)
+  },
+  createWorkspaceDirectory: async (args: Workspace): Promise<void> => {
+    return ipcRenderer.invoke(CHANNELS.WORKSPACES_CREATE_DIRECTORY, args)
   },
 } as const
 

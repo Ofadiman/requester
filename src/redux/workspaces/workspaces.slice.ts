@@ -9,6 +9,7 @@ export const workspacesSlice = createSlice({
   name: 'workspacesSlice',
   initialState,
   reducers: {
+    // TODO: Refactor the name of this reducer so that it better reflects what it really does (e.g. `createWorkspace`).
     addOne: (state, action: PayloadAction<Workspace>) => {
       workspacesAdapter.addOne(state, action.payload)
       state.currentId = action.payload.id
@@ -22,5 +23,3 @@ export type Workspace = {
   name: string
   id: string
 }
-
-export type WorkspaceSliceState = typeof initialState
