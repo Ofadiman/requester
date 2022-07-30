@@ -31,6 +31,14 @@ export const httpRequestsSlice = createSlice({
   name: 'httpRequests',
   initialState,
   reducers: {
+    changeUrl: (state, action: PayloadAction<{ newUrl: string; requestId: string }>) => {
+      httpRequestsAdapter.updateOne(state, {
+        id: action.payload.requestId,
+        changes: {
+          url: action.payload.newUrl,
+        },
+      })
+    },
     changeMethod: (
       state,
       action: PayloadAction<{ newMethod: HTTP_METHODS; requestId: string }>,

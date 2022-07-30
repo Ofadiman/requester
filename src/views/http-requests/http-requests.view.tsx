@@ -1,4 +1,4 @@
-import React, { useId } from 'react'
+import React, { ChangeEvent, useId } from 'react'
 import {
   Box,
   Button,
@@ -78,6 +78,19 @@ export const HttpRequestsView: React.FC = () => {
       httpRequestsSlice.actions.changeMethod({
         requestId: currentHttpRequest.id,
         newMethod: event.target.value as HTTP_METHODS,
+      }),
+    )
+  }
+
+  const handleUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (typeGuards.isUndefined(currentHttpRequest)) {
+      return
+    }
+
+    dispatch(
+      httpRequestsSlice.actions.changeUrl({
+        newUrl: event.target.value,
+        requestId: currentHttpRequest.id,
       }),
     )
   }
@@ -171,6 +184,8 @@ export const HttpRequestsView: React.FC = () => {
                   id="1eceef86-5ebe-4db9-8c4c-2c1d2f959b1a"
                   label="Outlined"
                   variant="outlined"
+                  value={currentHttpRequest?.url ?? ''}
+                  onChange={handleUrlChange}
                 />
               </Grid>
             </Grid>
