@@ -1,5 +1,15 @@
-import React from 'react'
-import { Box, Button, Grid } from '@mui/material'
+import React, { useId } from 'react'
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from '@mui/material'
 import { useDispatch } from 'react-redux'
 import {
   HTTP_REQUEST_STATUSES,
@@ -12,6 +22,7 @@ import { HTTP_METHODS } from '../../constants/http-methods'
 import { typeGuards } from '../../utils/type-guards'
 
 export const HttpRequestsView: React.FC = () => {
+  const id = useId()
   const dispatch = useDispatch()
   const httpRequests = useTypedSelector((state) =>
     httpRequestsAdapter.getSelectors().selectAll(state.httpRequests),
@@ -28,7 +39,7 @@ export const HttpRequestsView: React.FC = () => {
   })
 
   const handleAddHttpRequest = () => {
-    // TODO: I want to create an entity factory later.
+    // TODO: Probably, I want to just call `createHttpRequest` here and initialize all the fields in reducer.
     dispatch(
       httpRequestsSlice.actions.createHttpRequest({
         id: uuidFactory.generateVersion4(),
@@ -58,6 +69,20 @@ export const HttpRequestsView: React.FC = () => {
     dispatch(httpRequestsSlice.actions.httpRequestPending({ id: currentHttpRequest.id }))
   }
 
+  const handleChange = (event: SelectChangeEvent<HTTP_METHODS>) => {
+    if (typeGuards.isUndefined(currentHttpRequest)) {
+      return
+    }
+
+    dispatch(
+      httpRequestsSlice.actions.changeMethod({
+        requestId: currentHttpRequest.id,
+        newMethod: event.target.value as HTTP_METHODS,
+      }),
+    )
+  }
+
+  // TODO: Handle a situation when user closes all tabs and the is NO current http request selected.
   return (
     <Grid
       sx={{
@@ -118,7 +143,37 @@ export const HttpRequestsView: React.FC = () => {
           })}
         </Grid>
         <Grid container item xs={10} sx={{ backgroundColor: 'hsla(120,100%,50%,0.5)' }}>
-          <Grid item>
+          <Grid container>
+            <Grid container>
+              <Grid item xs={2}>
+                <FormControl fullWidth>
+                  <InputLabel id={id}>Age</InputLabel>
+                  <Select
+                    labelId={id}
+                    id="1df76b4d-1890-46af-ae4b-6d4339ba0873"
+                    value={currentHttpRequest?.httpMethod ?? HTTP_METHODS.GET}
+                    label="Age"
+                    onChange={handleChange}
+                  >
+                    {Object.values(HTTP_METHODS).map((httpMethod) => {
+                      return (
+                        <MenuItem value={httpMethod} key={httpMethod}>
+                          {httpMethod}
+                        </MenuItem>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  fullWidth
+                  id="1eceef86-5ebe-4db9-8c4c-2c1d2f959b1a"
+                  label="Outlined"
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
             <Box>{JSON.stringify(currentHttpRequest)}</Box>
             <Button variant={'contained'} onClick={handleHttpRequestStart}>
               Dispatch fetch start action
