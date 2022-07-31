@@ -27,6 +27,11 @@ const initialState = httpRequestsAdapter.getInitialState({
   currentId: null as string | null,
 })
 
+export type HttpRequestsChangeMethodAction = PayloadAction<{
+  newMethod: HTTP_METHODS
+  requestId: string
+}>
+
 export const httpRequestsSlice = createSlice({
   name: 'httpRequests',
   initialState,
@@ -39,10 +44,7 @@ export const httpRequestsSlice = createSlice({
         },
       })
     },
-    changeMethod: (
-      state,
-      action: PayloadAction<{ newMethod: HTTP_METHODS; requestId: string }>,
-    ) => {
+    changeMethod: (state, action: HttpRequestsChangeMethodAction) => {
       httpRequestsAdapter.updateOne(state, {
         id: action.payload.requestId,
         changes: {

@@ -5,6 +5,7 @@ import { IpcRendererEvent } from 'electron'
 import { AxiosResponse } from 'axios'
 import { Workspace } from './redux/workspaces/workspaces.slice'
 import { HttpRequest } from './redux/http-requests/http-requests.slice'
+import { HTTP_METHODS } from './constants/http-methods'
 
 /**
  * This script will be run in the context of the renderer process and will be executed before the web content starts loading.
@@ -51,6 +52,13 @@ const PRELOADED = {
   },
   createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> => {
     return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CREATE, args)
+  },
+  changeHttpRequestMethod: async (args: {
+    requestName: string
+    newMethod: HTTP_METHODS
+    workspacePath: string
+  }): Promise<void> => {
+    return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_METHOD, args)
   },
 } as const
 
