@@ -254,6 +254,69 @@ const headers = {}
     },
   )
 
+  ipcMain.handle(
+    CHANNELS.HTTP_REQUESTS_CHANGE_URL,
+    async (
+      _event,
+      args: {
+        requestName: string
+        newUrl: string
+        workspacePath: string
+      },
+    ) => {
+      const REQUESTER_WORKSPACE_DIRECTORY_NAME = '.requester'
+      const filePath = path.join(
+        args.workspacePath,
+        REQUESTER_WORKSPACE_DIRECTORY_NAME,
+        `${args.requestName}.ts`,
+      )
+
+      const project = new Project({
+        // I want to use TypeScript settings that I'm already using in the project to keep consistency in file outputs.
+        tsConfigFilePath: './tsconfig.json',
+        // I don't want to load all source files that are declared in tsconfig because I want to work on 1 file only.
+        skipAddingFilesFromTsConfig: true,
+        // I don't want to include all related files from the file that I will load manually.
+        skipFileDependencyResolution: true,
+        manipulationSettings: {
+          indentationText: IndentationText.TwoSpaces,
+          insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: true,
+          newLineKind: NewLineKind.LineFeed,
+          quoteKind: QuoteKind.Single,
+          usePrefixAndSuffixTextForRename: false,
+          useTrailingCommas: true,
+        },
+      })
+
+      project.addSourceFileAtPath(filePath)
+
+      const sourceFile = project.getSourceFile(filePath)
+      if (typeGuards.isUndefined(sourceFile)) {
+        throw new Error(`Source file at path "${filePath}" not found!`)
+      }
+
+      const metaVariableDeclaration = sourceFile.getVariableDeclarationOrThrow('meta')
+
+      const updateHttpMethod = (node: Node) => {
+        if (node.isKind(ts.SyntaxKind.Identifier)) {
+          if (node.getText() === 'url') {
+            const colonNode = node.getNextSiblingOrThrow()
+            const httpMethodLiteralNode = colonNode.getNextSiblingOrThrow()
+            httpMethodLiteralNode.replaceWithText(`'${args.newUrl}'`)
+          }
+        }
+
+        node.forEachChild((childNode) => updateHttpMethod(childNode))
+      }
+
+      metaVariableDeclaration.forEachChild((node) => {
+        updateHttpMethod(node)
+      })
+
+      sourceFile.saveSync()
+    },
+  )
+
   await createWindow()
 })
 

@@ -60,6 +60,13 @@ const PRELOADED = {
   }): Promise<void> => {
     return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_METHOD, args)
   },
+  changeHttpRequestUrl: async (args: {
+    requestName: string
+    newUrl: string
+    workspacePath: string
+  }): Promise<void> => {
+    return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_URL, args)
+  },
 } as const
 
 export type CreateHttpRequestFileArgs = { httpRequest: HttpRequest; workspace: Workspace }
