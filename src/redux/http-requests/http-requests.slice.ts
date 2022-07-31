@@ -9,6 +9,7 @@ export enum HTTP_REQUEST_STATUSES {
   REJECTED = 'REJECTED',
 }
 
+// TODO: `path` and `query` are out of sync with whatever is stored in configuration files. Rename them to `queryParameters` and `pathParameters` respectively.
 export type HttpRequest = {
   id: string
   name: string
@@ -34,10 +35,35 @@ export type HttpRequestsChangeMethodAction = PayloadAction<{
 
 export type HttpRequestsChangeUrlAction = PayloadAction<{ newUrl: string; requestId: string }>
 
+export type HttpRequestsSynchronizeAction = PayloadAction<{
+  meta: {
+    id: string
+    type: string
+    url: string
+  }
+  body: HttpRequest['body']
+  queryParameters: HttpRequest['query']
+  pathParameters: HttpRequest['path']
+  // TODO: Headers are missing from HTTP request configuration.
+  headers: unknown
+}>
+
 export const httpRequestsSlice = createSlice({
   name: 'httpRequests',
   initialState,
   reducers: {
+    synchronizeFs: (state, action: HttpRequestsSynchronizeAction) => {
+      httpRequestsAdapter.updateOne(state, {
+        id: action.payload.meta.id,
+        changes: {
+          url: action.payload.meta.url,
+          query: action.payload.queryParameters,
+          path: action.payload.pathParameters,
+          body: action.payload.body,
+          httpMethod: action.payload.meta.type as HTTP_METHODS,
+        },
+      })
+    },
     changeUrl: (state, action: HttpRequestsChangeUrlAction) => {
       httpRequestsAdapter.updateOne(state, {
         id: action.payload.requestId,
