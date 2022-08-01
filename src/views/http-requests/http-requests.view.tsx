@@ -39,15 +39,17 @@ export const HttpRequestsView: React.FC = () => {
   })
 
   const handleAddHttpRequest = () => {
+    // TODO: Handle the case where a request named "New request" already exists in the selected folder.
     // TODO: Probably, I want to just call `createHttpRequest` here and initialize all the fields in reducer.
     dispatch(
       httpRequestsSlice.actions.createHttpRequest({
         id: uuidFactory.generateVersion4(),
-        path: {},
+        pathParameters: {},
         name: 'New request',
         httpMethod: HTTP_METHODS.GET,
         body: {},
-        query: {},
+        queryParameters: {},
+        headers: {},
         url: '',
         status: HTTP_REQUEST_STATUSES.NEW,
         requestResult: {

@@ -9,17 +9,31 @@ export enum HTTP_REQUEST_STATUSES {
   REJECTED = 'REJECTED',
 }
 
-// TODO: `path` and `query` are out of sync with whatever is stored in configuration files. Rename them to `queryParameters` and `pathParameters` respectively.
+// TODO: Add a type where a JSON array is returned over the network.
+/**
+ * This type corresponds to what the value of a JSON object sent over the network might look like.
+ */
+export type JsonObject = {
+  [Key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | JsonObject
+    | Array<string | number | boolean | null | JsonObject | Array<JsonObject>>
+}
+
 export type HttpRequest = {
+  body: JsonObject
+  headers: Record<string, string>
+  httpMethod: HTTP_METHODS
   id: string
   name: string
-  httpMethod: HTTP_METHODS
-  url: string
-  body: Record<string, unknown>
-  path: Record<string, unknown>
-  query: Record<string, unknown>
+  pathParameters: Record<string, string>
+  queryParameters: Record<string, string>
   requestResult: Pick<AxiosResponse, 'data' | 'status' | 'headers'>
   status: HTTP_REQUEST_STATUSES
+  url: string
 }
 
 export const httpRequestsAdapter = createEntityAdapter<HttpRequest>()
@@ -42,10 +56,9 @@ export type HttpRequestsSynchronizeAction = PayloadAction<{
     url: string
   }
   body: HttpRequest['body']
-  queryParameters: HttpRequest['query']
-  pathParameters: HttpRequest['path']
-  // TODO: Headers are missing from HTTP request configuration.
-  headers: unknown
+  queryParameters: HttpRequest['queryParameters']
+  pathParameters: HttpRequest['pathParameters']
+  headers: HttpRequest['headers']
 }>
 
 export const httpRequestsSlice = createSlice({
@@ -57,8 +70,8 @@ export const httpRequestsSlice = createSlice({
         id: action.payload.meta.id,
         changes: {
           url: action.payload.meta.url,
-          query: action.payload.queryParameters,
-          path: action.payload.pathParameters,
+          queryParameters: action.payload.queryParameters,
+          pathParameters: action.payload.pathParameters,
           body: action.payload.body,
           httpMethod: action.payload.meta.type as HTTP_METHODS,
         },
