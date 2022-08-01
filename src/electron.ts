@@ -39,6 +39,9 @@ if (electronConfig.isDevelopment) {
   app.setPath('userData', path.join(app.getAppPath(), 'userData'))
 }
 
+const logger = new Logger('electron')
+
+// TODO: Figure out how to validate the data in the store and how to add full type safety.
 // It is very important to initialize the store after I set the `userData` path because otherwise, electron store will read the `userData` path before the change.
 export const fileSystemStorage = new Store()
 
@@ -97,9 +100,26 @@ const createWindow = async (): Promise<void> => {
     browserWindow.webContents.openDevTools()
   }
 
-  // TODO: Take this file path from current workspace configuration.
+  const reduxStore: RootState | undefined = fileSystemStorage.get(
+    FILE_SYSTEM_STORAGE_KEYS.REDUX_STORE,
+  ) as RootState
+
+  if (typeGuards.isUndefined(reduxStore)) {
+    return
+  }
+  if (typeGuards.isNull(reduxStore.workspacesSlice.currentId)) {
+    return
+  }
+
+  const workspace = reduxStore.workspacesSlice.entities[reduxStore.workspacesSlice.currentId]
+  if (typeGuards.isUndefined(workspace)) {
+    return
+  }
+
   // TODO: Close watcher when current workspace changes.
-  watch('/home/ofadiman/projects/private/requester/.requester').on('all', async (event, path) => {
+  watch(`${workspace.path}/.requester`).on('all', async (event, path) => {
+    logger.info(`Current workspace path`, `${workspace.path}/.requester`)
+
     // TODO: Handle other kind of events.
     if (event === 'change') {
       const fileContent = fs.readFileSync(path, {
