@@ -9,10 +9,6 @@ export enum HTTP_REQUEST_STATUSES {
   REJECTED = 'REJECTED',
 }
 
-// TODO: Add a type where a JSON array is returned over the network.
-/**
- * This type corresponds to what the value of a JSON object sent over the network might look like.
- */
 export type JsonObject = {
   [Key: string]:
     | string
@@ -23,8 +19,15 @@ export type JsonObject = {
     | Array<string | number | boolean | null | JsonObject | Array<JsonObject>>
 }
 
+export type JsonArray = Array<string | number | boolean | null | JsonObject | Array<JsonObject>>
+
+/**
+ * This type corresponds to what the value of a JSON object sent over the network might look like.
+ */
+export type Json = JsonObject | JsonArray
+
 export type HttpRequest = {
-  body: JsonObject
+  body: Json
   headers: Record<string, string>
   httpMethod: HTTP_METHODS
   id: string
