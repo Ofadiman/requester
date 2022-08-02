@@ -1,0 +1,1 @@
+export const DEFAULT_REQUESTER_WORKSPACE_DIRECTORY_NAME = '.requester'
