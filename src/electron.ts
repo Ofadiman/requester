@@ -191,8 +191,7 @@ app.whenReady().then(async () => {
 
       const REQUESTER_WORKSPACE_DIRECTORY_NAME = '.requester'
       const requesterDirectoryPath = path.join(args.path, REQUESTER_WORKSPACE_DIRECTORY_NAME)
-      const selectedDirectoryDoesNotExist = fs.existsSync(requesterDirectoryPath) === false
-      if (selectedDirectoryDoesNotExist) {
+      if (typeGuards.isFalse(fs.existsSync(requesterDirectoryPath))) {
         fs.mkdirSync(requesterDirectoryPath)
       }
     },

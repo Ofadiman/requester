@@ -22,6 +22,14 @@ class TypeGuards {
   public isNotNullNorUndefined<Type>(value: Type | undefined | null): value is Type {
     return !(value === undefined || value === null)
   }
+
+  public isTrue(value: boolean): value is true {
+    return value === true
+  }
+
+  public isFalse(value: boolean): value is false {
+    return value === false
+  }
 }
 
 export const typeGuards = new TypeGuards()
