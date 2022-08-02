@@ -1,11 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { CHANNELS } from './constants/channels'
+import { CHANNELS } from './enums/channels'
 import { RootState } from './redux/store'
 import { IpcRendererEvent } from 'electron'
 import { AxiosResponse } from 'axios'
 import { Workspace } from './redux/workspaces/workspaces.slice'
 import { HttpRequest } from './redux/http-requests/http-requests.slice'
-import { HTTP_METHODS } from './constants/http-methods'
+import { HTTP_METHODS } from './enums/http-methods'
 
 /**
  * This script will be run in the context of the renderer process and will be executed before the web content starts loading.

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { NODE_ENV } from '../constants/node-env'
+import { NODE_ENV } from '../enums/node-env'
 
 enum ENVIRONMENT_VARIABLES {
   LOG_LEVEL = 'LOG_LEVEL',

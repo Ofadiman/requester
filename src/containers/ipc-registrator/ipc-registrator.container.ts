@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { CHANNELS } from '../../constants/channels'
+import { CHANNELS } from '../../enums/channels'
 import { useNavigate } from 'react-router-dom'
 import { NavigateFunction } from 'react-router/lib/hooks'
 import { IpcRendererEvent } from 'electron'

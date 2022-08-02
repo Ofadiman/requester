@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { HTTP_METHODS } from '../../constants/http-methods'
+import { HTTP_METHODS } from '../../enums/http-methods'
 import { AxiosResponse } from 'axios'
 
 export enum HTTP_REQUEST_STATUSES {

@@ -18,7 +18,7 @@ import {
 } from '../../redux/http-requests/http-requests.slice'
 import { uuidFactory } from '../../utils/uuid.factory'
 import { useTypedSelector } from '../../redux/store'
-import { HTTP_METHODS } from '../../constants/http-methods'
+import { HTTP_METHODS } from '../../enums/http-methods'
 import { typeGuards } from '../../utils/type-guards'
 
 export const HttpRequestsView: React.FC = () => {
