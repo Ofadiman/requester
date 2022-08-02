@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { CHANNELS } from './enums/channels'
-import { RootState } from './redux/store'
 import { IpcRendererEvent } from 'electron'
 import { AxiosResponse } from 'axios'
 import { Workspace } from './redux/workspaces/workspaces.slice'
@@ -18,17 +17,12 @@ import { HTTP_METHODS } from './enums/http-methods'
  */
 
 const PRELOADED = {
-  initializeReduxStore: async () => {
-    return ipcRenderer.invoke(CHANNELS.REDUX_STORE_INITIALIZE)
-  },
   openDirectoryPicker: async () => {
     return ipcRenderer.invoke(CHANNELS.DIRECTORY_PICKER_OPEN)
   },
+  // TODO: I would probably prefer to use `persistor` object to reset redux store state from the main process.
   clearReduxStore: async () => {
     return ipcRenderer.invoke(CHANNELS.REDUX_STORE_CLEAR)
-  },
-  persistReduxStore: async (args: RootState) => {
-    return ipcRenderer.invoke(CHANNELS.REDUX_STORE_PERSIST, args)
   },
   registerIpcMainEventHandler: (
     channel: CHANNELS,
@@ -66,6 +60,15 @@ const PRELOADED = {
     workspacePath: string
   }): Promise<void> => {
     return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_URL, args)
+  },
+  electronStoreGetItem: async (key: string) => {
+    return ipcRenderer.invoke(CHANNELS.ELECTRON_STORE_GET_ITEM, key)
+  },
+  electronStoreSetItem: async (key: string, value: unknown) => {
+    await ipcRenderer.send(CHANNELS.ELECTRON_STORE_SET_ITEM, key, value)
+  },
+  electronStoreRemoveItem: async (key: string) => {
+    await ipcRenderer.send(CHANNELS.ELECTRON_STORE_REMOVE_ITEM, key)
   },
 } as const
 

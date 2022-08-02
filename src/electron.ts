@@ -168,16 +168,20 @@ app.whenReady().then(async () => {
     })
   })
 
-  ipcMain.handle(CHANNELS.REDUX_STORE_INITIALIZE, () => {
-    return fileSystemStorage.get(FILE_SYSTEM_STORAGE_KEYS.REDUX_STORE)
-  })
-
-  ipcMain.handle(CHANNELS.REDUX_STORE_PERSIST, (_event, store: RootState) => {
-    fileSystemStorage.set(FILE_SYSTEM_STORAGE_KEYS.REDUX_STORE, store)
-  })
-
   ipcMain.handle(CHANNELS.REDUX_STORE_CLEAR, () => {
     fileSystemStorage.clear()
+  })
+
+  ipcMain.on(CHANNELS.ELECTRON_STORE_SET_ITEM, (_event, key: string, value: unknown) => {
+    fileSystemStorage.set(key, value)
+  })
+
+  ipcMain.handle(CHANNELS.ELECTRON_STORE_GET_ITEM, (_event, key: string) => {
+    return fileSystemStorage.get(key)
+  })
+
+  ipcMain.on(CHANNELS.ELECTRON_STORE_REMOVE_ITEM, (_event, key: string) => {
+    fileSystemStorage.delete(key)
   })
 
   ipcMain.handle(

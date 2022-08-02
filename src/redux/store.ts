@@ -3,6 +3,16 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import { workspacesSlice } from './workspaces/workspaces.slice'
 import { httpRequestsSlice } from './http-requests/http-requests.slice'
 import { default as createSagaMiddleware } from 'redux-saga'
+import {
+  persistReducer,
+  Storage,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
 
 export type RootState = ReturnType<typeof rootReducer>
 const rootReducer = combineReducers({
@@ -10,16 +20,41 @@ const rootReducer = combineReducers({
   [httpRequestsSlice.name]: httpRequestsSlice.reducer,
 })
 
+export class ReduxPersistElectronStorage implements Storage {
+  public async getItem(key: string): Promise<void> {
+    return window.electron.electronStoreGetItem(key)
+  }
+
+  public async setItem(key: string, value: unknown) {
+    await window.electron.electronStoreSetItem(key, value)
+  }
+
+  public async removeItem(key: string) {
+    await window.electron.electronStoreRemoveItem(key)
+  }
+}
+
+const persistedReducer = persistReducer(
+  {
+    key: 'root-reducer',
+    version: 1,
+    storage: new ReduxPersistElectronStorage(),
+  },
+  rootReducer,
+)
+
 // TODO: Check which middlewares and enhancers I can use to improve the application or developer experience.
-export const configureAppStore = (preloadedState: RootState | undefined) => {
+export const configureAppStore = () => {
   const sagaMiddleware = createSagaMiddleware()
 
   const store = configureStore({
-    reducer: rootReducer,
-    preloadedState: preloadedState ?? {},
+    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => {
       return [
         ...getDefaultMiddleware({
+          serializableCheck: {
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+          },
           // I want to use `redux-saga` library to handle asynchronous actions in the application so I disabled `redux-thunk` which does the same thing.
           thunk: false,
         }),

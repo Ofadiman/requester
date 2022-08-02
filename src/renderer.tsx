@@ -7,12 +7,11 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { CreateWorkspaceView } from './views/create-workspace/create-workspace.view'
 import { HttpRequestsView } from './views/http-requests/http-requests.view'
 import { Provider } from 'react-redux'
-import { configureAppStore, RootState } from './redux/store'
+import { configureAppStore } from './redux/store'
 import { IpcRegistrator } from './containers/ipc-registrator/ipc-registrator.container'
-import { Logger } from './utils/logger'
 import { rootSaga } from './redux/root.saga'
-
-const logger = new Logger('renderer')
+import { persistStore } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
 
 const htmlRoot = document.getElementById('react-app')
 if (htmlRoot === null) {
@@ -20,29 +19,16 @@ if (htmlRoot === null) {
 }
 const root = ReactDOMClient.createRoot(htmlRoot)
 
-window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) => {
-  logger.info(`Redux store`, reduxStore)
+const { store, sagaMiddleware } = configureAppStore()
+const persistor = persistStore(store)
 
-  const { store, sagaMiddleware } = configureAppStore(reduxStore)
+sagaMiddleware.run(rootSaga)
 
-  // COMMENT: It might be possible to use the `redux-persist` library, because from what I've read in the documentation after creating this code is that it gives the option to pass a custom storage engine.
-  // TODO: Create custom storage engine for `redux-persist` library.
-  store.subscribe(() => {
-    const currentReduxStore = store.getState()
-    void window.electron.persistReduxStore(currentReduxStore)
-
-    logger.info(
-      `This is the redux store immediately after an action is handled by a reducer.`,
-      currentReduxStore,
-    )
-  })
-
-  sagaMiddleware.run(rootSaga)
-
-  root.render(
-    <StrictMode>
-      <CssBaseline />
-      <Provider store={store}>
+root.render(
+  <StrictMode>
+    <CssBaseline />
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
         <MemoryRouter initialEntries={['/http-requests']}>
           <IpcRegistrator />
           <Routes>
@@ -50,7 +36,7 @@ window.electron.initializeReduxStore().then((reduxStore: RootState | undefined) 
             <Route path={`/create-workspace`} element={<CreateWorkspaceView />} />
           </Routes>
         </MemoryRouter>
-      </Provider>
-    </StrictMode>,
-  )
-})
+      </PersistGate>
+    </Provider>
+  </StrictMode>,
+)
