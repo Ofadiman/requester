@@ -25,8 +25,10 @@ import { useTypedSelector } from '../../redux/store'
 import { HTTP_METHODS } from '../../enums/http-methods'
 import { typeGuards } from '../../utils/type-guards'
 import { WidgetsRounded, FolderCopyRounded } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 export const HttpRequestsView: React.FC = () => {
+  const navigate = useNavigate()
   const id = useId()
   const dispatch = useDispatch()
   const httpRequests = useTypedSelector((state) =>
@@ -113,7 +115,12 @@ export const HttpRequestsView: React.FC = () => {
         borderTopWidth: 1,
       }}
     >
-      <MenuItem sx={{ display: 'flex', flexFlow: 'column' }}>
+      <MenuItem
+        sx={{ display: 'flex', flexFlow: 'column' }}
+        onClick={() => {
+          navigate('/http-requests')
+        }}
+      >
         <ListItemIcon>
           <FolderCopyRounded fontSize="medium" />
         </ListItemIcon>
@@ -126,7 +133,12 @@ export const HttpRequestsView: React.FC = () => {
         </ListItemText>
       </MenuItem>
       <Divider />
-      <MenuItem sx={{ display: 'flex', flexFlow: 'column' }}>
+      <MenuItem
+        sx={{ display: 'flex', flexFlow: 'column' }}
+        onClick={() => {
+          navigate('/environments')
+        }}
+      >
         <ListItemIcon>
           <WidgetsRounded fontSize="medium" />
         </ListItemIcon>

@@ -12,6 +12,7 @@ import { IpcRegistrator } from './containers/ipc-registrator/ipc-registrator.con
 import { rootSaga } from './redux/root.saga'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
+import { EnvironmentsView } from './views/environments/environments.view'
 
 const htmlRoot = document.getElementById('react-app')
 if (htmlRoot === null) {
@@ -34,6 +35,7 @@ root.render(
           <Routes>
             <Route path={`/http-requests`} element={<HttpRequestsView />} />
             <Route path={`/create-workspace`} element={<CreateWorkspaceView />} />
+            <Route path={`/environments`} element={<EnvironmentsView />} />
           </Routes>
         </MemoryRouter>
       </PersistGate>
