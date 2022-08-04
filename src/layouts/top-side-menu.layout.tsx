@@ -19,9 +19,9 @@ export const TopSideMenuLayout: React.FC<{ children: React.ReactNode }> = (props
   return (
     <Grid
       sx={{
-        width: '100vw',
         height: '100vh',
         margin: 0,
+        width: '100vw',
       }}
       container
       direction="column"

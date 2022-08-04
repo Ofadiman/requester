@@ -44,21 +44,22 @@ export const HttpRequestsView: React.FC = () => {
     // TODO: Probably, I want to just call `createHttpRequest` here and initialize all the fields in reducer.
     dispatch(
       httpRequestsSlice.actions.createHttpRequest({
-        id: uuidFactory.generateVersion4(),
-        pathParameters: {},
-        name: 'New request',
-        httpMethod: HTTP_METHODS.GET,
         body: {},
-        queryParameters: {},
         headers: {},
-        url: '',
-        status: HTTP_REQUEST_STATUSES.NEW,
+        httpMethod: HTTP_METHODS.GET,
+        id: uuidFactory.generateVersion4(),
+        name: 'New request',
+        pathParameters: {},
+        queryParameters: {},
         requestResult: {
           data: {},
-          // TODO: I would probably like to set `null` as the default value here.
-          status: 0,
+          
           headers: {},
+          // TODO: I would probably like to set `null` as the default value here.
+status: 0,
         },
+        status: HTTP_REQUEST_STATUSES.NEW,
+        url: '',
       }),
     )
   }
@@ -79,8 +80,8 @@ export const HttpRequestsView: React.FC = () => {
 
     dispatch(
       httpRequestsSlice.actions.changeMethod({
-        requestId: currentHttpRequest.id,
         newMethod: event.target.value as HTTP_METHODS,
+        requestId: currentHttpRequest.id,
       }),
     )
   }

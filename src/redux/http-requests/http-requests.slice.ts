@@ -66,48 +66,31 @@ export type HttpRequestsSynchronizeAction = PayloadAction<{
 }>
 
 export const httpRequestsSlice = createSlice({
-  name: 'httpRequests',
   initialState,
+  name: 'httpRequests',
   reducers: {
-    synchronizeFs: (state, action: HttpRequestsSynchronizeAction) => {
+    changeCurrentRequest: (state, action: PayloadAction<{ id: string }>) => {
+      state.currentId = action.payload.id
+    },
+    changeMethod: (state, action: HttpRequestsChangeMethodAction) => {
       httpRequestsAdapter.updateOne(state, {
-        id: action.payload.meta.id,
         changes: {
-          url: action.payload.meta.url,
-          queryParameters: action.payload.queryParameters,
-          pathParameters: action.payload.pathParameters,
-          body: action.payload.body,
-          httpMethod: action.payload.meta.type as HTTP_METHODS,
+          httpMethod: action.payload.newMethod,
         },
+        id: action.payload.requestId,
       })
     },
     changeUrl: (state, action: HttpRequestsChangeUrlAction) => {
       httpRequestsAdapter.updateOne(state, {
-        id: action.payload.requestId,
         changes: {
           url: action.payload.newUrl,
         },
-      })
-    },
-    changeMethod: (state, action: HttpRequestsChangeMethodAction) => {
-      httpRequestsAdapter.updateOne(state, {
         id: action.payload.requestId,
-        changes: {
-          httpMethod: action.payload.newMethod,
-        },
       })
     },
     createHttpRequest: (state, action: PayloadAction<HttpRequest>) => {
       httpRequestsAdapter.addOne(state, action)
       state.currentId = action.payload.id
-    },
-    httpRequestPending: (state, action: PayloadAction<{ id: string }>) => {
-      httpRequestsAdapter.updateOne(state, {
-        id: action.payload.id,
-        changes: {
-          status: HTTP_REQUEST_STATUSES.PENDING,
-        },
-      })
     },
     httpRequestFulfilled: (
       state,
@@ -117,23 +100,40 @@ export const httpRequestsSlice = createSlice({
       }>,
     ) => {
       httpRequestsAdapter.updateOne(state, {
-        id: action.payload.id,
         changes: {
-          status: HTTP_REQUEST_STATUSES.FULFILLED,
           requestResult: action.payload.requestResult,
+          status: HTTP_REQUEST_STATUSES.FULFILLED,
         },
+        id: action.payload.id,
+      })
+    },
+    httpRequestPending: (state, action: PayloadAction<{ id: string }>) => {
+      httpRequestsAdapter.updateOne(state, {
+        changes: {
+          status: HTTP_REQUEST_STATUSES.PENDING,
+        },
+        id: action.payload.id,
       })
     },
     httpRequestRejected: (state, action: PayloadAction<{ id: string }>) => {
       httpRequestsAdapter.updateOne(state, {
-        id: action.payload.id,
         changes: {
           status: HTTP_REQUEST_STATUSES.REJECTED,
         },
+        id: action.payload.id,
       })
     },
-    changeCurrentRequest: (state, action: PayloadAction<{ id: string }>) => {
-      state.currentId = action.payload.id
+    synchronizeFs: (state, action: HttpRequestsSynchronizeAction) => {
+      httpRequestsAdapter.updateOne(state, {
+        changes: {
+          body: action.payload.body,
+          httpMethod: action.payload.meta.type as HTTP_METHODS,
+          pathParameters: action.payload.pathParameters,
+          queryParameters: action.payload.queryParameters,
+          url: action.payload.meta.url,
+        },
+        id: action.payload.meta.id,
+      })
     },
   },
 })

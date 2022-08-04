@@ -40,8 +40,8 @@ export function* changeHttpRequestMethodSaga(action: HttpRequestsChangeMethodAct
   }
 
   yield* call(window.electron.changeHttpRequestMethod, {
-    requestName: httpRequest.name,
     newMethod: action.payload.newMethod,
+    requestName: httpRequest.name,
     workspacePath: workspace.path,
   })
 }

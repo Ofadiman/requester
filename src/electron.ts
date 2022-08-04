@@ -51,12 +51,14 @@ export const fileSystemStorage = new Store()
 const createWindow = async (): Promise<void> => {
   const browserWindow = new BrowserWindow({
     height: 900,
-    width: 1600,
     webPreferences: {
-      sandbox: true, // I set this option to `true` because it will limit the renderer's process permissions while it is running, which translates into increased security. Official documentation recommends so. (https://www.electronjs.org/docs/latest/tutorial/sandbox)
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-      contextIsolation: true,
+      
+contextIsolation: true, 
+      // I set this option to `true` because it will limit the renderer's process permissions while it is running, which translates into increased security. Official documentation recommends so. (https://www.electronjs.org/docs/latest/tutorial/sandbox)
+preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      sandbox: true,
     },
+    width: 1600,
   })
 
   const menu = Menu.getApplicationMenu()
@@ -66,22 +68,22 @@ const createWindow = async (): Promise<void> => {
         label: 'Debug',
         submenu: [
           {
-            label: 'Reset store',
             click: () => {
               browserWindow.webContents.send(CHANNELS.REDUX_STORE_RESET_FROM_MAIN_PROCESS)
             },
+            label: 'Reset store',
           },
           {
-            label: 'Navigate to http requests view',
             click: () => {
               browserWindow.webContents.send(CHANNELS.NAVIGATION, { to: '/http-requests' })
             },
+            label: 'Navigate to http requests view',
           },
           {
-            label: 'Navigate to create workspace view',
             click: () => {
               browserWindow.webContents.send(CHANNELS.NAVIGATION, { to: '/create-workspace' })
             },
+            label: 'Navigate to create workspace view',
           },
         ],
       }),
@@ -195,7 +197,7 @@ app.whenReady().then(async () => {
       const response = await axios.get(`https://jsonplaceholder.typicode.com/todos/1`)
       logger.info('Axios response in electron', response)
 
-      return { headers: response.headers, data: response.data, status: response.status }
+      return { data: response.data, headers: response.headers, status: response.status }
     },
   )
 
@@ -265,13 +267,9 @@ export const headers = {}
       )
 
       const project = new Project({
-        // I want to use TypeScript settings that I'm already using in the project to keep consistency in file outputs.
-        tsConfigFilePath: './tsconfig.json',
-        // I don't want to load all source files that are declared in tsconfig because I want to work on 1 file only.
-        skipAddingFilesFromTsConfig: true,
-        // I don't want to include all related files from the file that I will load manually.
-        skipFileDependencyResolution: true,
-        manipulationSettings: {
+        
+        
+manipulationSettings: {
           indentationText: IndentationText.TwoSpaces,
           insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: true,
           newLineKind: NewLineKind.LineFeed,
@@ -279,6 +277,17 @@ export const headers = {}
           usePrefixAndSuffixTextForRename: false,
           useTrailingCommas: true,
         },
+        
+        
+// I don't want to load all source files that are declared in tsconfig because I want to work on 1 file only.
+skipAddingFilesFromTsConfig: true,
+        
+        
+// I don't want to include all related files from the file that I will load manually.
+skipFileDependencyResolution: true,
+        
+// I want to use TypeScript settings that I'm already using in the project to keep consistency in file outputs.
+tsConfigFilePath: './tsconfig.json',
       })
 
       project.addSourceFileAtPath(filePath)
@@ -329,13 +338,9 @@ export const headers = {}
       )
 
       const project = new Project({
-        // I want to use TypeScript settings that I'm already using in the project to keep consistency in file outputs.
-        tsConfigFilePath: './tsconfig.json',
-        // I don't want to load all source files that are declared in tsconfig because I want to work on 1 file only.
-        skipAddingFilesFromTsConfig: true,
-        // I don't want to include all related files from the file that I will load manually.
-        skipFileDependencyResolution: true,
-        manipulationSettings: {
+        
+        
+manipulationSettings: {
           indentationText: IndentationText.TwoSpaces,
           insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: true,
           newLineKind: NewLineKind.LineFeed,
@@ -343,6 +348,17 @@ export const headers = {}
           usePrefixAndSuffixTextForRename: false,
           useTrailingCommas: true,
         },
+        
+        
+// I don't want to load all source files that are declared in tsconfig because I want to work on 1 file only.
+skipAddingFilesFromTsConfig: true,
+        
+        
+// I don't want to include all related files from the file that I will load manually.
+skipFileDependencyResolution: true,
+        
+// I want to use TypeScript settings that I'm already using in the project to keep consistency in file outputs.
+tsConfigFilePath: './tsconfig.json',
       })
 
       project.addSourceFileAtPath(filePath)

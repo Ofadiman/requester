@@ -6,8 +6,8 @@ const initialState = workspacesAdapter.getInitialState({
 })
 
 export const workspacesSlice = createSlice({
-  name: 'workspacesSlice',
   initialState,
+  name: 'workspacesSlice',
   reducers: {
     // TODO: Refactor the name of this reducer so that it better reflects what it really does (e.g. `createWorkspace`).
     addOne: (state, action: PayloadAction<Workspace>) => {

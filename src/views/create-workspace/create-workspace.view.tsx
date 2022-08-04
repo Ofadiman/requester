@@ -11,9 +11,9 @@ import { uuidFactory } from '../../utils/uuid.factory'
 import { Workspace, workspacesSlice } from '../../redux/workspaces/workspaces.slice'
 
 const styles: SxProps<Theme> = {
-  width: '100vw',
-  height: '100vh',
   display: 'grid',
+  height: '100vh',
+  width: '100vw',
 }
 
 export const CreateWorkspaceView: FC = () => {
@@ -38,8 +38,8 @@ export const CreateWorkspaceView: FC = () => {
 
     const pickedWorkspace: Workspace = {
       id: uuidFactory.generateVersion4(),
-      path: workspacePath,
       name: `Some name here ${Math.random()}`,
+      path: workspacePath,
     }
 
     dispatch(workspacesSlice.actions.addOne(pickedWorkspace))

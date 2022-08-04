@@ -9,7 +9,9 @@ module.exports = {
     'plugin:typescript-sort-keys/recommended',
     'prettier',
   ],
+  plugins: ['sort-keys-fix'],
   rules: {
+    'sort-keys-fix/sort-keys-fix': 'error',
     'import/order': [
       'error',
       {

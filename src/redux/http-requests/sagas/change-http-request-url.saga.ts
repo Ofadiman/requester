@@ -40,8 +40,8 @@ export function* changeHttpRequestUrlSaga(action: HttpRequestsChangeUrlAction) {
   }
 
   yield* call(window.electron.changeHttpRequestUrl, {
-    requestName: httpRequest.name,
     newUrl: action.payload.newUrl,
+    requestName: httpRequest.name,
     workspacePath: workspace.path,
   })
 }

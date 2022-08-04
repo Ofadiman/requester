@@ -38,8 +38,8 @@ export class ReduxPersistElectronStorage implements Storage {
 const persistedReducer = persistReducer(
   {
     key: 'root-reducer',
-    version: 1,
     storage: new ReduxPersistElectronStorage(),
+    version: 1,
   },
   rootReducer,
 )
@@ -49,7 +49,6 @@ export const configureAppStore = () => {
   const sagaMiddleware = createSagaMiddleware()
 
   const store = configureStore({
-    reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware({
         serializableCheck: {
@@ -60,6 +59,7 @@ export const configureAppStore = () => {
       }),
       sagaMiddleware,
     ],
+    reducer: persistedReducer,
   })
 
   // TODO: Hot module replacement is not working for unknown reasons.
@@ -67,7 +67,7 @@ export const configureAppStore = () => {
   //   module.hot.accept('./root.reducer', () => store.replaceReducer(rootReducer))
   // }
 
-  return { store, sagaMiddleware }
+  return { sagaMiddleware, store }
 }
 
 type TypedSelector = TypedUseSelectorHook<RootState>
