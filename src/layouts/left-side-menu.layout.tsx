@@ -58,7 +58,7 @@ export const LeftSideMenuLayout: React.FC<{ children: React.ReactNode }> = (prop
   )
 
   return (
-    <Grid flexGrow={1} container item direction={'row'} wrap={'nowrap'} spacing={0}>
+    <Grid flexGrow={1} container item direction="row" wrap="nowrap" spacing={0}>
       <Grid item>{LeftSideMenu}</Grid>
       <Grid item container flexGrow={1}>
         {props.children}

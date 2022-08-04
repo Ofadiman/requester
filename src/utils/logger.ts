@@ -1,6 +1,7 @@
+/* eslint-disable no-console */
 import chalk from 'chalk'
-import { typeGuards } from './type-guards'
 import { toUpper } from 'ramda'
+import { typeGuards } from './type-guards'
 
 type LoggedValue = object | boolean | string | number | null
 

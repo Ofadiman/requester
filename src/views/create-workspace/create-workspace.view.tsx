@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Box, Button, IconButton, Snackbar } from '@mui/material'
-import { SxProps } from '@mui/system'
-import { Theme } from '@mui/material/styles'
+import { SxProps, Theme } from '@mui/material/styles'
 import { AddRounded, CloseRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
@@ -58,7 +57,7 @@ export const CreateWorkspaceView: FC = () => {
   return (
     <Box sx={styles}>
       <Button
-        variant={'contained'}
+        variant="contained"
         sx={{
           margin: 'auto',
         }}
@@ -71,7 +70,7 @@ export const CreateWorkspaceView: FC = () => {
           open={isSnackbarOpen}
           autoHideDuration={dayjs.duration({ seconds: 5 }).asMilliseconds()}
           onClose={handleSnackbarClose}
-          message={`Workspace picker canceled`}
+          message="Workspace picker canceled"
           action={
             <IconButton
               size="small"

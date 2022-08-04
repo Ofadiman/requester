@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
-import { CHANNELS } from '../../enums/channels'
-import { useNavigate } from 'react-router-dom'
-import { NavigateFunction } from 'react-router/lib/hooks'
+import { useNavigate, NavigateFunction } from 'react-router-dom'
 import { IpcRendererEvent } from 'electron'
 import { useDispatch } from 'react-redux'
-import { Dispatch } from 'redux'
+import { Dispatch } from '@reduxjs/toolkit'
+import { CHANNELS } from '../../enums/channels'
 import {
   httpRequestsSlice,
   HttpRequestsSynchronizeAction,
@@ -17,18 +16,18 @@ const clearReduxStoreIpc = async (): Promise<void> => {
   await window.electron.clearReduxStore()
 }
 
-const createNavigationFunction = (navigate: NavigateFunction) => {
+const createNavigationFunction =
+  (navigate: NavigateFunction) =>
   // TODO: Add better typings to arguments received from the main process.
-  return (_event: IpcRendererEvent, args: { to: string }) => {
+  (_event: IpcRendererEvent, args: { to: string }) => {
     navigate(args.to)
   }
-}
 
-const createDispatchFunction = (dispatch: Dispatch) => {
-  return (_event: IpcRendererEvent, args: HttpRequestsSynchronizeAction['payload']) => {
+const createDispatchFunction =
+  (dispatch: Dispatch) =>
+  (_event: IpcRendererEvent, args: HttpRequestsSynchronizeAction['payload']) => {
     dispatch(httpRequestsSlice.actions.synchronizeFs(args))
   }
-}
 
 /**
  * In order to be able to make changes to the react application from the main process via IPC events I have to register event handlers somewhere in the react tree, where hooks can be used and all contexts are available.
@@ -70,7 +69,7 @@ export const IpcRegistrator: React.FC = () => {
         dispatchIpc,
       )
     }
-  }, [])
+  }, [dispatchIpc, navigateIpc])
 
   return null
 }

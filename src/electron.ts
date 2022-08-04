@@ -1,26 +1,25 @@
 import './dayjs.bootstrap'
 import { MenuItem, Menu, app, BrowserWindow, dialog, ipcMain } from 'electron'
-import { CHANNELS } from './enums/channels'
-import { RootState } from './redux/store'
 import { watch } from 'chokidar'
 import * as fs from 'node:fs'
-import { electronConfig } from './utils/electron.config'
-import {
-  default as installExtensions,
+import installExtensions, {
   REDUX_DEVTOOLS,
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer'
 import * as path from 'path'
 import Store from 'electron-store'
+import axios, { AxiosResponse } from 'axios'
+import { IndentationText, NewLineKind, Project, QuoteKind, Node, ts } from 'ts-morph'
+import { requireFromString } from 'module-from-string'
+import { CHANNELS } from './enums/channels'
+import { RootState } from './redux/store'
+import { electronConfig } from './utils/electron.config'
 import { FILE_SYSTEM_STORAGE_KEYS } from './enums/file-system-storage-keys'
 import { typeGuards } from './utils/type-guards'
 import { Logger } from './utils/logger'
-import axios, { AxiosResponse } from 'axios'
 import { Workspace } from './redux/workspaces/workspaces.slice'
 import { CreateHttpRequestFileArgs } from './preload'
 import { HTTP_METHODS } from './enums/http-methods'
-import { IndentationText, NewLineKind, Project, QuoteKind, Node, ts } from 'ts-morph'
-import { requireFromString } from 'module-from-string'
 import { HttpRequestsSynchronizeAction } from './redux/http-requests/http-requests.slice'
 import { DEFAULT_REQUESTER_WORKSPACE_DIRECTORY_NAME } from './constants'
 
@@ -31,6 +30,7 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// eslint-disable-next-line global-require
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
   app.quit()
@@ -40,7 +40,7 @@ if (electronConfig.isDevelopment) {
   app.setPath('userData', path.join(app.getAppPath(), 'userData'))
 }
 
-const logger = new Logger('electron')
+const logger = new Logger('ipc main')
 
 // TODO: Figure out how to validate the data in the store and how to add full type safety.
 // It is very important to initialize the store after I set the `userData` path because otherwise, electron store will read the `userData` path before the change.
@@ -121,7 +121,7 @@ const createWindow = async (): Promise<void> => {
   // TODO: Close watcher when current workspace changes.
   watch(`${workspace.path}/${DEFAULT_REQUESTER_WORKSPACE_DIRECTORY_NAME}`).on(
     'all',
-    async (event, path) => {
+    async (event, fileSystemPathWhereChangesOccurred) => {
       logger.info(
         `Current workspace path`,
         `${workspace.path}/${DEFAULT_REQUESTER_WORKSPACE_DIRECTORY_NAME}`,
@@ -129,7 +129,7 @@ const createWindow = async (): Promise<void> => {
 
       // TODO: Handle other kind of events.
       if (event === 'change') {
-        const fileContent = fs.readFileSync(path, {
+        const fileContent = fs.readFileSync(fileSystemPathWhereChangesOccurred, {
           encoding: 'utf8',
         })
 
@@ -156,8 +156,6 @@ const createWindow = async (): Promise<void> => {
 app.whenReady().then(async () => {
   await installExtensions([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
 
-  const logger = new Logger('ipc main')
-
   ipcMain.handle(CHANNELS.DIRECTORY_PICKER_OPEN, async (event) => {
     const browserWindowFromWebContents = BrowserWindow.fromWebContents(event.sender)
     if (browserWindowFromWebContents === null) {
@@ -177,9 +175,9 @@ app.whenReady().then(async () => {
     fileSystemStorage.set(key, value)
   })
 
-  ipcMain.handle(CHANNELS.ELECTRON_STORE_GET_ITEM, (_event, key: string) => {
-    return fileSystemStorage.get(key)
-  })
+  ipcMain.handle(CHANNELS.ELECTRON_STORE_GET_ITEM, (_event, key: string) =>
+    fileSystemStorage.get(key),
+  )
 
   ipcMain.on(CHANNELS.ELECTRON_STORE_REMOVE_ITEM, (_event, key: string) => {
     fileSystemStorage.delete(key)

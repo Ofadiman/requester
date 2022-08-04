@@ -4,14 +4,14 @@ import { StrictMode } from 'react'
 import * as ReactDOMClient from 'react-dom/client'
 import { CssBaseline } from '@mui/material'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { persistStore } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
 import { CreateWorkspaceView } from './views/create-workspace/create-workspace.view'
 import { HttpRequestsView } from './views/http-requests/http-requests.view'
-import { Provider } from 'react-redux'
 import { configureAppStore } from './redux/store'
 import { IpcRegistrator } from './containers/ipc-registrator/ipc-registrator.container'
 import { rootSaga } from './redux/root.saga'
-import { persistStore } from 'redux-persist'
-import { PersistGate } from 'redux-persist/integration/react'
 import { EnvironmentsView } from './views/environments/environments.view'
 import { TopSideMenuLayout } from './layouts/top-side-menu.layout'
 import { LeftSideMenuLayout } from './layouts/left-side-menu.layout'
@@ -37,9 +37,9 @@ root.render(
           <TopSideMenuLayout>
             <LeftSideMenuLayout>
               <Routes>
-                <Route path={`/http-requests`} element={<HttpRequestsView />} />
-                <Route path={`/create-workspace`} element={<CreateWorkspaceView />} />
-                <Route path={`/environments`} element={<EnvironmentsView />} />
+                <Route path="/http-requests" element={<HttpRequestsView />} />
+                <Route path="/create-workspace" element={<CreateWorkspaceView />} />
+                <Route path="/environments" element={<EnvironmentsView />} />
               </Routes>
             </LeftSideMenuLayout>
           </TopSideMenuLayout>

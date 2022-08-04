@@ -1,7 +1,7 @@
 import { call, put, select } from 'typed-redux-saga'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { httpRequestsAdapter, httpRequestsSlice } from '../http-requests.slice'
 import { RootState } from '../../store'
-import { PayloadAction } from '@reduxjs/toolkit'
 import { typeGuards } from '../../../utils/type-guards'
 import { Logger } from '../../../utils/logger'
 

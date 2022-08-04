@@ -99,16 +99,15 @@ export const HttpRequestsView: React.FC = () => {
 
   // TODO: Handle a situation when user closes all tabs and the is NO current http request selected.
   return (
-    <Grid container item flexGrow={1} direction={'row'}>
-      <Grid container item xs={2} direction={'column'}>
+    <Grid container item flexGrow={1} direction="row">
+      <Grid container item xs={2} direction="column">
         <Grid item flexShrink={1}>
-          <Button fullWidth variant={'contained'} onClick={handleAddHttpRequest}>
+          <Button fullWidth variant="contained" onClick={handleAddHttpRequest}>
             Create request
           </Button>
         </Grid>
 
-        {httpRequests.map((httpRequest) => {
-          return (
+        {httpRequests.map((httpRequest) => (
             <Grid item flexShrink={1} key={httpRequest.id}>
               <Button
                 fullWidth
@@ -119,8 +118,7 @@ export const HttpRequestsView: React.FC = () => {
                 {httpRequest.id} {httpRequest.name}
               </Button>
             </Grid>
-          )
-        })}
+          ))}
       </Grid>
 
       <Grid container item flexGrow={1} xs={10}>
@@ -136,13 +134,11 @@ export const HttpRequestsView: React.FC = () => {
                   label="Age"
                   onChange={handleChange}
                 >
-                  {Object.values(HTTP_METHODS).map((httpMethod) => {
-                    return (
+                  {Object.values(HTTP_METHODS).map((httpMethod) => (
                       <MenuItem value={httpMethod} key={httpMethod}>
                         {httpMethod}
                       </MenuItem>
-                    )
-                  })}
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -158,7 +154,7 @@ export const HttpRequestsView: React.FC = () => {
             </Grid>
           </Grid>
           <Box>{JSON.stringify(currentHttpRequest)}</Box>
-          <Button variant={'contained'} onClick={handleHttpRequestStart}>
+          <Button variant="contained" onClick={handleHttpRequestStart}>
             Dispatch fetch start action
           </Button>
         </Grid>

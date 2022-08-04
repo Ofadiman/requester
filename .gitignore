@@ -9,6 +9,8 @@
 !userData
 
 # Include the following files.
+!.eslintignore
+!.eslintrc.js
 !.gitignore
 !.prettierrc.js
 !Makefile

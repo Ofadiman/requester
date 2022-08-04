@@ -24,8 +24,8 @@ export const TopSideMenuLayout: React.FC<{ children: React.ReactNode }> = (props
         margin: 0,
       }}
       container
-      direction={'column'}
-      wrap={'nowrap'}
+      direction="column"
+      wrap="nowrap"
     >
       <Grid container item spacing={0} sx={{ height: 64 }}>
         {TopSideMenu}

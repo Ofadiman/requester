@@ -1,8 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useSelector } from 'react-redux'
-import { workspacesSlice } from './workspaces/workspaces.slice'
-import { httpRequestsSlice } from './http-requests/http-requests.slice'
-import { default as createSagaMiddleware } from 'redux-saga'
+import createSagaMiddleware from 'redux-saga'
 import {
   persistReducer,
   Storage,
@@ -13,6 +11,8 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist'
+import { workspacesSlice } from './workspaces/workspaces.slice'
+import { httpRequestsSlice } from './http-requests/http-requests.slice'
 
 export type RootState = ReturnType<typeof rootReducer>
 const rootReducer = combineReducers({
@@ -49,18 +49,16 @@ export const configureAppStore = () => {
 
   const store = configureStore({
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) => {
-      return [
-        ...getDefaultMiddleware({
-          serializableCheck: {
-            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-          },
-          // I want to use `redux-saga` library to handle asynchronous actions in the application so I disabled `redux-thunk` which does the same thing.
-          thunk: false,
-        }),
-        sagaMiddleware,
-      ]
-    },
+    middleware: (getDefaultMiddleware) => [
+      ...getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+        // I want to use `redux-saga` library to handle asynchronous actions in the application so I disabled `redux-thunk` which does the same thing.
+        thunk: false,
+      }),
+      sagaMiddleware,
+    ],
   })
 
   // TODO: Hot module replacement is not working for unknown reasons.

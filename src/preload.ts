@@ -1,7 +1,6 @@
-import { contextBridge, ipcRenderer } from 'electron'
-import { CHANNELS } from './enums/channels'
-import { IpcRendererEvent } from 'electron'
+import { contextBridge, ipcRenderer , IpcRendererEvent } from 'electron'
 import { AxiosResponse } from 'axios'
+import { CHANNELS } from './enums/channels'
 import { Workspace } from './redux/workspaces/workspaces.slice'
 import { HttpRequest } from './redux/http-requests/http-requests.slice'
 import { HTTP_METHODS } from './enums/http-methods'
@@ -17,13 +16,9 @@ import { HTTP_METHODS } from './enums/http-methods'
  */
 
 const PRELOADED = {
-  openDirectoryPicker: async () => {
-    return ipcRenderer.invoke(CHANNELS.DIRECTORY_PICKER_OPEN)
-  },
+  openDirectoryPicker: async () => ipcRenderer.invoke(CHANNELS.DIRECTORY_PICKER_OPEN),
   // TODO: I would probably prefer to use `persistor` object to reset redux store state from the main process.
-  clearReduxStore: async () => {
-    return ipcRenderer.invoke(CHANNELS.REDUX_STORE_CLEAR)
-  },
+  clearReduxStore: async () => ipcRenderer.invoke(CHANNELS.REDUX_STORE_CLEAR),
   registerIpcMainEventHandler: (
     channel: CHANNELS,
     callback: (event: IpcRendererEvent, ...args: any[]) => void,
@@ -38,32 +33,20 @@ const PRELOADED = {
   },
   makeRequest: async (
     args: unknown,
-  ): Promise<Pick<AxiosResponse, 'data' | 'status' | 'headers'>> => {
-    return ipcRenderer.invoke(CHANNELS.HTTP_MAKE_REQUEST, args)
-  },
-  createWorkspaceDirectory: async (args: Workspace): Promise<void> => {
-    return ipcRenderer.invoke(CHANNELS.WORKSPACES_CREATE_DIRECTORY, args)
-  },
-  createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> => {
-    return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CREATE, args)
-  },
+  ): Promise<Pick<AxiosResponse, 'data' | 'status' | 'headers'>> => ipcRenderer.invoke(CHANNELS.HTTP_MAKE_REQUEST, args),
+  createWorkspaceDirectory: async (args: Workspace): Promise<void> => ipcRenderer.invoke(CHANNELS.WORKSPACES_CREATE_DIRECTORY, args),
+  createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CREATE, args),
   changeHttpRequestMethod: async (args: {
     requestName: string
     newMethod: HTTP_METHODS
     workspacePath: string
-  }): Promise<void> => {
-    return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_METHOD, args)
-  },
+  }): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_METHOD, args),
   changeHttpRequestUrl: async (args: {
     requestName: string
     newUrl: string
     workspacePath: string
-  }): Promise<void> => {
-    return ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_URL, args)
-  },
-  electronStoreGetItem: async (key: string) => {
-    return ipcRenderer.invoke(CHANNELS.ELECTRON_STORE_GET_ITEM, key)
-  },
+  }): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_URL, args),
+  electronStoreGetItem: async (key: string) => ipcRenderer.invoke(CHANNELS.ELECTRON_STORE_GET_ITEM, key),
   electronStoreSetItem: async (key: string, value: unknown) => {
     await ipcRenderer.send(CHANNELS.ELECTRON_STORE_SET_ITEM, key, value)
   },
