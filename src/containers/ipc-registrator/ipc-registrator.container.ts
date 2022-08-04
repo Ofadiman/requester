@@ -3,11 +3,12 @@ import { useNavigate, NavigateFunction } from 'react-router-dom'
 import { IpcRendererEvent } from 'electron'
 import { useDispatch } from 'react-redux'
 import { Dispatch } from '@reduxjs/toolkit'
-import { CHANNELS } from '../../enums/channels'
+
 import {
   httpRequestsSlice,
   HttpRequestsSynchronizeAction,
 } from '../../redux/http-requests/http-requests.slice'
+import { CHANNELS } from '../../enums/channels'
 
 const clearReduxStoreIpc = async (): Promise<void> => {
   /**

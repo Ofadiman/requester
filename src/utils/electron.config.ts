@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { NODE_ENV } from '../enums/node-env'
 
 enum ENVIRONMENT_VARIABLES {

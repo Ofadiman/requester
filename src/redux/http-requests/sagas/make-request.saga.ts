@@ -1,5 +1,6 @@
-import { call, put, select } from 'typed-redux-saga'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { call, put, select } from 'typed-redux-saga'
+
 import { httpRequestsAdapter, httpRequestsSlice } from '../http-requests.slice'
 import { RootState } from '../../store'
 import { typeGuards } from '../../../utils/type-guards'

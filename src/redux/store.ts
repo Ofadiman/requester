@@ -11,8 +11,9 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist'
-import { workspacesSlice } from './workspaces/workspaces.slice'
+
 import { httpRequestsSlice } from './http-requests/http-requests.slice'
+import { workspacesSlice } from './workspaces/workspaces.slice'
 
 export type RootState = ReturnType<typeof rootReducer>
 const rootReducer = combineReducers({

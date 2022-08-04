@@ -1,5 +1,6 @@
-import { call, select } from 'typed-redux-saga'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { call, select } from 'typed-redux-saga'
+
 import { Logger } from '../../../utils/logger'
 import { HttpRequest } from '../http-requests.slice'
 import { workspacesAdapter } from '../../workspaces/workspaces.slice'

@@ -1,5 +1,6 @@
-import { contextBridge, ipcRenderer , IpcRendererEvent } from 'electron'
 import { AxiosResponse } from 'axios'
+import { contextBridge, ipcRenderer , IpcRendererEvent } from 'electron'
+
 import { CHANNELS } from './enums/channels'
 import { Workspace } from './redux/workspaces/workspaces.slice'
 import { HttpRequest } from './redux/http-requests/http-requests.slice'

@@ -5,9 +5,10 @@ import { AddRounded, CloseRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { Workspace, workspacesSlice } from '../../redux/workspaces/workspaces.slice'
-import { uuidFactory } from '../../utils/uuid.factory'
+
 import { typeGuards } from '../../utils/type-guards'
+import { uuidFactory } from '../../utils/uuid.factory'
+import { Workspace, workspacesSlice } from '../../redux/workspaces/workspaces.slice'
 
 const styles: SxProps<Theme> = {
   width: '100vw',

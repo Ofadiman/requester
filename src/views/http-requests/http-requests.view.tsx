@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useId } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   Box,
   Button,
@@ -10,7 +10,8 @@ import {
   SelectChangeEvent,
   TextField,
 } from '@mui/material'
-import { useDispatch } from 'react-redux'
+import React, { ChangeEvent, useId } from 'react'
+
 import {
   HTTP_REQUEST_STATUSES,
   httpRequestsAdapter,

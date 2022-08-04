@@ -1,16 +1,18 @@
 import './dayjs.bootstrap'
-import { MenuItem, Menu, app, BrowserWindow, dialog, ipcMain } from 'electron'
-import { watch } from 'chokidar'
+import * as path from 'path'
 import * as fs from 'node:fs'
+
+import { requireFromString } from 'module-from-string'
+import { IndentationText, NewLineKind, Project, QuoteKind, Node, ts } from 'ts-morph'
+import axios, { AxiosResponse } from 'axios'
+import Store from 'electron-store'
 import installExtensions, {
   REDUX_DEVTOOLS,
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer'
-import * as path from 'path'
-import Store from 'electron-store'
-import axios, { AxiosResponse } from 'axios'
-import { IndentationText, NewLineKind, Project, QuoteKind, Node, ts } from 'ts-morph'
-import { requireFromString } from 'module-from-string'
+import { watch } from 'chokidar'
+import { MenuItem, Menu, app, BrowserWindow, dialog, ipcMain } from 'electron'
+
 import { CHANNELS } from './enums/channels'
 import { RootState } from './redux/store'
 import { electronConfig } from './utils/electron.config'
