@@ -19,7 +19,7 @@ export const workspacesSlice = createSlice({
 })
 
 export type Workspace = {
-  path: string
+  id: string,
   name: string
-  id: string
+  path: string
 }

@@ -253,8 +253,8 @@ export const headers = {}
     async (
       _event,
       args: {
-        requestName: string
-        newMethod: HTTP_METHODS
+        newMethod: HTTP_METHODS,
+        requestName: string,
         workspacePath: string
       },
     ) => {
@@ -317,8 +317,8 @@ export const headers = {}
     async (
       _event,
       args: {
-        requestName: string
-        newUrl: string
+        newUrl: string,
+        requestName: string,
         workspacePath: string
       },
     ) => {

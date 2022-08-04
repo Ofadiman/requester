@@ -38,13 +38,13 @@ const PRELOADED = {
   createWorkspaceDirectory: async (args: Workspace): Promise<void> => ipcRenderer.invoke(CHANNELS.WORKSPACES_CREATE_DIRECTORY, args),
   createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CREATE, args),
   changeHttpRequestMethod: async (args: {
-    requestName: string
-    newMethod: HTTP_METHODS
+    newMethod: HTTP_METHODS,
+    requestName: string,
     workspacePath: string
   }): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_METHOD, args),
   changeHttpRequestUrl: async (args: {
-    requestName: string
-    newUrl: string
+    newUrl: string,
+    requestName: string,
     workspacePath: string
   }): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_URL, args),
   electronStoreGetItem: async (key: string) => ipcRenderer.invoke(CHANNELS.ELECTRON_STORE_GET_ITEM, key),

@@ -2,7 +2,13 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json',
   },
-  extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
+  extends: [
+    'airbnb',
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:typescript-sort-keys/recommended',
+    'prettier',
+  ],
   rules: {
     'import/order': [
       'error',

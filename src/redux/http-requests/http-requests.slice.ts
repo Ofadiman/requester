@@ -4,9 +4,9 @@ import { AxiosResponse } from 'axios'
 import { HTTP_METHODS } from '../../enums/http-methods'
 
 export enum HTTP_REQUEST_STATUSES {
+  FULFILLED = 'FULFILLED',
   NEW = 'NEW',
   PENDING = 'PENDING',
-  FULFILLED = 'FULFILLED',
   REJECTED = 'REJECTED',
 }
 
@@ -54,15 +54,15 @@ export type HttpRequestsChangeMethodAction = PayloadAction<{
 export type HttpRequestsChangeUrlAction = PayloadAction<{ newUrl: string; requestId: string }>
 
 export type HttpRequestsSynchronizeAction = PayloadAction<{
+  body: HttpRequest['body'],
+  headers: HttpRequest['headers'],
   meta: {
     id: string
     type: string
     url: string
-  }
-  body: HttpRequest['body']
-  queryParameters: HttpRequest['queryParameters']
+  },
   pathParameters: HttpRequest['pathParameters']
-  headers: HttpRequest['headers']
+  queryParameters: HttpRequest['queryParameters']
 }>
 
 export const httpRequestsSlice = createSlice({
