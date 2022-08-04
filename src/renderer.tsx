@@ -13,6 +13,8 @@ import { rootSaga } from './redux/root.saga'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { EnvironmentsView } from './views/environments/environments.view'
+import { TopSideMenuLayout } from './layouts/top-side-menu.layout'
+import { LeftSideMenuLayout } from './layouts/left-side-menu.layout'
 
 const htmlRoot = document.getElementById('react-app')
 if (htmlRoot === null) {
@@ -32,11 +34,15 @@ root.render(
       <PersistGate loading={null} persistor={persistor}>
         <MemoryRouter initialEntries={['/http-requests']}>
           <IpcRegistrator />
-          <Routes>
-            <Route path={`/http-requests`} element={<HttpRequestsView />} />
-            <Route path={`/create-workspace`} element={<CreateWorkspaceView />} />
-            <Route path={`/environments`} element={<EnvironmentsView />} />
-          </Routes>
+          <TopSideMenuLayout>
+            <LeftSideMenuLayout>
+              <Routes>
+                <Route path={`/http-requests`} element={<HttpRequestsView />} />
+                <Route path={`/create-workspace`} element={<CreateWorkspaceView />} />
+                <Route path={`/environments`} element={<EnvironmentsView />} />
+              </Routes>
+            </LeftSideMenuLayout>
+          </TopSideMenuLayout>
         </MemoryRouter>
       </PersistGate>
     </Provider>

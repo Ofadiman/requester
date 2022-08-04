@@ -2,14 +2,10 @@ import React, { ChangeEvent, useId } from 'react'
 import {
   Box,
   Button,
-  Divider,
   FormControl,
   Grid,
   InputLabel,
-  ListItemIcon,
-  ListItemText,
   MenuItem,
-  MenuList,
   Select,
   SelectChangeEvent,
   TextField,
@@ -24,11 +20,8 @@ import { uuidFactory } from '../../utils/uuid.factory'
 import { useTypedSelector } from '../../redux/store'
 import { HTTP_METHODS } from '../../enums/http-methods'
 import { typeGuards } from '../../utils/type-guards'
-import { WidgetsRounded, FolderCopyRounded } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
 
 export const HttpRequestsView: React.FC = () => {
-  const navigate = useNavigate()
   const id = useId()
   const dispatch = useDispatch()
   const httpRequests = useTypedSelector((state) =>
@@ -104,148 +97,70 @@ export const HttpRequestsView: React.FC = () => {
     )
   }
 
-  const LeftNavigationMenu = (
-    <MenuList
-      sx={{
-        borderRightColor: (theme) => theme.palette.divider,
-        borderRightStyle: 'solid',
-        borderRightWidth: 1,
-        borderTopColor: (theme) => theme.palette.divider,
-        borderTopStyle: 'solid',
-        borderTopWidth: 1,
-      }}
-    >
-      <MenuItem
-        sx={{ display: 'flex', flexFlow: 'column' }}
-        onClick={() => {
-          navigate('/http-requests')
-        }}
-      >
-        <ListItemIcon>
-          <FolderCopyRounded fontSize="medium" />
-        </ListItemIcon>
-        <ListItemText
-          primaryTypographyProps={{
-            fontSize: (theme) => theme.typography.caption.fontSize,
-          }}
-        >
-          Requests
-        </ListItemText>
-      </MenuItem>
-      <Divider />
-      <MenuItem
-        sx={{ display: 'flex', flexFlow: 'column' }}
-        onClick={() => {
-          navigate('/environments')
-        }}
-      >
-        <ListItemIcon>
-          <WidgetsRounded fontSize="medium" />
-        </ListItemIcon>
-        <ListItemText
-          primaryTypographyProps={{
-            fontSize: (theme) => theme.typography.caption.fontSize,
-          }}
-        >
-          Environments
-        </ListItemText>
-      </MenuItem>
-      <Divider />
-    </MenuList>
-  )
-
   // TODO: Handle a situation when user closes all tabs and the is NO current http request selected.
   return (
-    <Grid
-      sx={{
-        width: '100vw',
-        height: '100vh',
-        margin: 0,
-      }}
-      container
-      spacing={1}
-      direction={'column'}
-      wrap={'nowrap'}
-    >
-      <Grid container item spacing={1} sx={{ height: 64 }} xs={0}>
-        <Grid item>
-          <Box>Workspace picker here</Box>
+    <Grid container item flexGrow={1} direction={'row'}>
+      <Grid container item xs={2} direction={'column'}>
+        <Grid item flexShrink={1}>
+          <Button fullWidth variant={'contained'} onClick={handleAddHttpRequest}>
+            Create request
+          </Button>
         </Grid>
-        <Grid item flexGrow={1}>
-          <Box>Expander here</Box>
-        </Grid>
-        <Grid item>
-          <Box>Some menu here</Box>
-        </Grid>
+
+        {httpRequests.map((httpRequest) => {
+          return (
+            <Grid item flexShrink={1} key={httpRequest.id}>
+              <Button
+                fullWidth
+                onClick={() => {
+                  dispatch(httpRequestsSlice.actions.changeCurrentRequest({ id: httpRequest.id }))
+                }}
+              >
+                {httpRequest.id} {httpRequest.name}
+              </Button>
+            </Grid>
+          )
+        })}
       </Grid>
 
-      <Grid container spacing={1} flexGrow={1} direction={'row'}>
-        <Grid item container xs={1}>
-          {LeftNavigationMenu}
-        </Grid>
-
-        <Grid spacing={1} container item xs={2} direction={'column'}>
-          <Grid item flexShrink={1}>
-            <Button fullWidth variant={'contained'} onClick={handleAddHttpRequest}>
-              Create request
-            </Button>
-          </Grid>
-
-          {httpRequests.map((httpRequest) => {
-            return (
-              <Grid item flexShrink={1} key={httpRequest.id}>
-                <Button
-                  fullWidth
-                  onClick={() => {
-                    dispatch(httpRequestsSlice.actions.changeCurrentRequest({ id: httpRequest.id }))
-                  }}
-                >
-                  {httpRequest.id} {httpRequest.name}
-                </Button>
-              </Grid>
-            )
-          })}
-        </Grid>
-
-        <Grid container item flexGrow={1} xs={9}>
+      <Grid container item flexGrow={1} xs={10}>
+        <Grid container>
           <Grid container>
-            <Grid container>
-              <Grid item xs={2}>
-                <FormControl fullWidth>
-                  <InputLabel id={id}>Age</InputLabel>
-                  <Select
-                    labelId={id}
-                    id="1df76b4d-1890-46af-ae4b-6d4339ba0873"
-                    value={currentHttpRequest?.httpMethod ?? HTTP_METHODS.GET}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    {Object.values(HTTP_METHODS).map((httpMethod) => {
-                      return (
-                        <MenuItem value={httpMethod} key={httpMethod}>
-                          {httpMethod}
-                        </MenuItem>
-                      )
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={10}>
-                <TextField
-                  fullWidth
-                  id="1eceef86-5ebe-4db9-8c4c-2c1d2f959b1a"
-                  label="Outlined"
-                  variant="outlined"
-                  value={currentHttpRequest?.url ?? ''}
-                  onChange={handleUrlChange}
-                />
-              </Grid>
+            <Grid item xs={2}>
+              <FormControl fullWidth>
+                <InputLabel id={id}>Age</InputLabel>
+                <Select
+                  labelId={id}
+                  id="1df76b4d-1890-46af-ae4b-6d4339ba0873"
+                  value={currentHttpRequest?.httpMethod ?? HTTP_METHODS.GET}
+                  label="Age"
+                  onChange={handleChange}
+                >
+                  {Object.values(HTTP_METHODS).map((httpMethod) => {
+                    return (
+                      <MenuItem value={httpMethod} key={httpMethod}>
+                        {httpMethod}
+                      </MenuItem>
+                    )
+                  })}
+                </Select>
+              </FormControl>
             </Grid>
-            <Box>{JSON.stringify(currentHttpRequest)}</Box>
-            <Button variant={'contained'} onClick={handleHttpRequestStart}>
-              Dispatch fetch start action
-            </Button>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                id="1eceef86-5ebe-4db9-8c4c-2c1d2f959b1a"
+                label="Outlined"
+                variant="outlined"
+                value={currentHttpRequest?.url ?? ''}
+                onChange={handleUrlChange}
+              />
+            </Grid>
           </Grid>
+          <Box>{JSON.stringify(currentHttpRequest)}</Box>
+          <Button variant={'contained'} onClick={handleHttpRequestStart}>
+            Dispatch fetch start action
+          </Button>
         </Grid>
       </Grid>
     </Grid>
