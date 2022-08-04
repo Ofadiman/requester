@@ -2,10 +2,14 @@ import React, { ChangeEvent, useId } from 'react'
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
+  MenuList,
   Select,
   SelectChangeEvent,
   TextField,
@@ -20,6 +24,7 @@ import { uuidFactory } from '../../utils/uuid.factory'
 import { useTypedSelector } from '../../redux/store'
 import { HTTP_METHODS } from '../../enums/http-methods'
 import { typeGuards } from '../../utils/type-guards'
+import { WidgetsRounded, FolderCopyRounded } from '@mui/icons-material'
 
 export const HttpRequestsView: React.FC = () => {
   const id = useId()
@@ -97,6 +102,46 @@ export const HttpRequestsView: React.FC = () => {
     )
   }
 
+  const LeftNavigationMenu = (
+    <MenuList
+      sx={{
+        borderRightColor: (theme) => theme.palette.divider,
+        borderRightStyle: 'solid',
+        borderRightWidth: 1,
+        borderTopColor: (theme) => theme.palette.divider,
+        borderTopStyle: 'solid',
+        borderTopWidth: 1,
+      }}
+    >
+      <MenuItem sx={{ display: 'flex', flexFlow: 'column' }}>
+        <ListItemIcon>
+          <FolderCopyRounded fontSize="medium" />
+        </ListItemIcon>
+        <ListItemText
+          primaryTypographyProps={{
+            fontSize: (theme) => theme.typography.caption.fontSize,
+          }}
+        >
+          Requests
+        </ListItemText>
+      </MenuItem>
+      <Divider />
+      <MenuItem sx={{ display: 'flex', flexFlow: 'column' }}>
+        <ListItemIcon>
+          <WidgetsRounded fontSize="medium" />
+        </ListItemIcon>
+        <ListItemText
+          primaryTypographyProps={{
+            fontSize: (theme) => theme.typography.caption.fontSize,
+          }}
+        >
+          Environments
+        </ListItemText>
+      </MenuItem>
+      <Divider />
+    </MenuList>
+  )
+
   // TODO: Handle a situation when user closes all tabs and the is NO current http request selected.
   return (
     <Grid
@@ -110,13 +155,7 @@ export const HttpRequestsView: React.FC = () => {
       direction={'column'}
       wrap={'nowrap'}
     >
-      <Grid
-        container
-        item
-        spacing={1}
-        sx={{ height: 64, backgroundColor: 'hsla(60,100%,50%,0.5)' }}
-        xs={0}
-      >
+      <Grid container item spacing={1} sx={{ height: 64 }} xs={0}>
         <Grid item>
           <Box>Workspace picker here</Box>
         </Grid>
@@ -127,15 +166,13 @@ export const HttpRequestsView: React.FC = () => {
           <Box>Some menu here</Box>
         </Grid>
       </Grid>
-      <Grid container spacing={1} sx={{ backgroundColor: 'green' }} flexGrow={1}>
-        <Grid
-          spacing={1}
-          container
-          item
-          xs={2}
-          sx={{ backgroundColor: 'hsla(90,100%,50%,0.5)' }}
-          direction={'column'}
-        >
+
+      <Grid container spacing={1} flexGrow={1} direction={'row'}>
+        <Grid item container xs={1}>
+          {LeftNavigationMenu}
+        </Grid>
+
+        <Grid spacing={1} container item xs={2} direction={'column'}>
           <Grid item flexShrink={1}>
             <Button fullWidth variant={'contained'} onClick={handleAddHttpRequest}>
               Create request
@@ -157,7 +194,8 @@ export const HttpRequestsView: React.FC = () => {
             )
           })}
         </Grid>
-        <Grid container item xs={10} sx={{ backgroundColor: 'hsla(120,100%,50%,0.5)' }}>
+
+        <Grid container item flexGrow={1} xs={9}>
           <Grid container>
             <Grid container>
               <Grid item xs={2}>

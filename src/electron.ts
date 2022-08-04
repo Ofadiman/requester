@@ -101,6 +101,7 @@ const createWindow = async (): Promise<void> => {
     browserWindow.webContents.openDevTools()
   }
 
+  // TODO: I don't know under which key redux store is available. Also, I can setup file system watchers after the UI is initialized.
   const reduxStore: RootState | undefined = fileSystemStorage.get(
     FILE_SYSTEM_STORAGE_KEYS.REDUX_STORE,
   ) as RootState
