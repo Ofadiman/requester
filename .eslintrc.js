@@ -27,6 +27,7 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
+    'import/no-extraneous-dependencies': 'off',
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-shadow': 'off',
     'class-methods-use-this': 'off',

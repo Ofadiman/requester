@@ -33,17 +33,31 @@ root.render(
     <CssBaseline />
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <MemoryRouter initialEntries={['/http-requests']}>
+        <MemoryRouter initialEntries={['/create-workspace']}>
           <IpcRegistrator />
-          <TopSideMenuLayout>
-            <LeftSideMenuLayout>
-              <Routes>
-                <Route path="/http-requests" element={<HttpRequestsView />} />
-                <Route path="/create-workspace" element={<CreateWorkspaceView />} />
-                <Route path="/environments" element={<EnvironmentsView />} />
-              </Routes>
-            </LeftSideMenuLayout>
-          </TopSideMenuLayout>
+          <Routes>
+            <Route path="/create-workspace" element={<CreateWorkspaceView />} />
+            <Route
+              path="/http-requests"
+              element={
+                <TopSideMenuLayout>
+                  <LeftSideMenuLayout>
+                    <HttpRequestsView />
+                  </LeftSideMenuLayout>
+                </TopSideMenuLayout>
+              }
+            />
+            <Route
+              path="/environments"
+              element={
+                <TopSideMenuLayout>
+                  <LeftSideMenuLayout>
+                    <EnvironmentsView />
+                  </LeftSideMenuLayout>
+                </TopSideMenuLayout>
+              }
+            />
+          </Routes>
         </MemoryRouter>
       </PersistGate>
     </Provider>

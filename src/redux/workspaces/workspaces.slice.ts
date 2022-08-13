@@ -19,7 +19,8 @@ export const workspacesSlice = createSlice({
 })
 
 export type Workspace = {
-  id: string,
+  encryptionKey: string
+  id: string
   name: string
   path: string
 }
