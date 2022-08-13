@@ -1,22 +1,16 @@
-import React, { FC, useState } from 'react'
+import React, { ChangeEvent, FC, useState } from 'react'
 import { Button, Grid, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material'
-import { SxProps, Theme } from '@mui/material/styles'
-import { AddRounded, CloseRounded, KeyRounded } from '@mui/icons-material'
+import { CasinoRounded, AddRounded, CloseRounded, KeyRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
 
 import { typeGuards } from '../../utils/type-guards'
-
-const styles: SxProps<Theme> = {
-  display: 'grid',
-  height: '100vh',
-  width: '100vw',
-}
 
 export const CreateWorkspaceView: FC = () => {
   // const dispatch = useDispatch()
   // const navigate = useNavigate()
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
   const [workspacePath, setWorkspacePath] = useState('')
+  const [encryptionKey, setEncryptionKey] = useState('')
 
   const openDirectoryPicker = async () => {
     const result: Electron.OpenDialogReturnValue = await window.electron.openDirectoryPicker()
@@ -55,24 +49,53 @@ export const CreateWorkspaceView: FC = () => {
     setIsSnackbarOpen(false)
   }
 
+  const generateEncryptionKey = async () => {
+    const encryptionKey = await window.electron.generateEncryptionKey()
+
+    setEncryptionKey(encryptionKey)
+  }
+
+  const handleEncryptionKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEncryptionKey(event.target.value)
+  }
+
   return (
     <>
-      <Grid flexGrow={1} container sx={styles} justifyContent="center" alignItems="center">
+      <Grid
+        flexGrow={1}
+        container
+        sx={{
+          display: 'grid',
+          height: '100vh',
+          width: '100vw',
+        }}
+        justifyContent="center"
+        alignItems="center"
+      >
         <Grid item container flexDirection="column" gap={3} sx={{ width: 400 }}>
-          <Grid item>
-            <TextField
-              fullWidth
-              id="encryption-key-3f1063ad-57f0-4af8-8b6a-2febe9d3b6ce"
-              label="Encryption key"
-              variant="standard"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <KeyRounded />
-                  </InputAdornment>
-                ),
-              }}
-            />
+          <Grid item container flexDirection="row" flexWrap="nowrap">
+            <Grid item container flexGrow={1} justifyContent="center" alignItems="center">
+              <TextField
+                fullWidth
+                id="encryption-key-3f1063ad-57f0-4af8-8b6a-2febe9d3b6ce"
+                label="Encryption key"
+                variant="standard"
+                onChange={handleEncryptionKeyChange}
+                value={encryptionKey}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <KeyRounded />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item container justifyContent="center" alignItems="center" xs>
+              <IconButton onClick={generateEncryptionKey}>
+                <CasinoRounded />
+              </IconButton>
+            </Grid>
           </Grid>
           <Grid item container flexDirection="row" flexWrap="nowrap">
             <Grid item container flexGrow={1} justifyContent="center" alignItems="center">

@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { contextBridge, ipcRenderer , IpcRendererEvent } from 'electron'
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron'
 
 import { CHANNELS } from './enums/channels'
 import { Workspace } from './redux/workspaces/workspaces.slice'
@@ -17,33 +17,34 @@ import { HTTP_METHODS } from './enums/http-methods'
  */
 
 const PRELOADED = {
-  
-changeHttpRequestMethod: async (args: {
-    newMethod: HTTP_METHODS,
-    requestName: string,
+  changeHttpRequestMethod: async (args: {
+    newMethod: HTTP_METHODS
+    requestName: string
     workspacePath: string
   }): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_METHOD, args),
-  
-  
-changeHttpRequestUrl: async (args: {
-    newUrl: string,
-    requestName: string,
+
+  changeHttpRequestUrl: async (args: {
+    newUrl: string
+    requestName: string
     workspacePath: string
   }): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_URL, args),
   // TODO: I would probably prefer to use `persistor` object to reset redux store state from the main process.
-clearReduxStore: async () => ipcRenderer.invoke(CHANNELS.REDUX_STORE_CLEAR),
-  createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CREATE, args),
-  createWorkspaceDirectory: async (args: Workspace): Promise<void> => ipcRenderer.invoke(CHANNELS.WORKSPACES_CREATE_DIRECTORY, args),
-  electronStoreGetItem: async (key: string) => ipcRenderer.invoke(CHANNELS.ELECTRON_STORE_GET_ITEM, key),
+  clearReduxStore: async () => ipcRenderer.invoke(CHANNELS.REDUX_STORE_CLEAR),
+  createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> =>
+    ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CREATE, args),
+  createWorkspaceDirectory: async (args: Workspace): Promise<void> =>
+    ipcRenderer.invoke(CHANNELS.WORKSPACES_CREATE_DIRECTORY, args),
+  electronStoreGetItem: async (key: string) =>
+    ipcRenderer.invoke(CHANNELS.ELECTRON_STORE_GET_ITEM, key),
   electronStoreRemoveItem: async (key: string) => {
     await ipcRenderer.send(CHANNELS.ELECTRON_STORE_REMOVE_ITEM, key)
   },
   electronStoreSetItem: async (key: string, value: unknown) => {
     await ipcRenderer.send(CHANNELS.ELECTRON_STORE_SET_ITEM, key, value)
   },
-  makeRequest: async (
-    args: unknown,
-  ): Promise<Pick<AxiosResponse, 'data' | 'status' | 'headers'>> => ipcRenderer.invoke(CHANNELS.HTTP_MAKE_REQUEST, args),
+  generateEncryptionKey: async () => ipcRenderer.invoke(CHANNELS.CRYPTO_GENERATE_ENCRYPTION_KEY),
+  makeRequest: async (args: unknown): Promise<Pick<AxiosResponse, 'data' | 'status' | 'headers'>> =>
+    ipcRenderer.invoke(CHANNELS.HTTP_MAKE_REQUEST, args),
   openDirectoryPicker: async () => ipcRenderer.invoke(CHANNELS.DIRECTORY_PICKER_OPEN),
   registerIpcMainEventHandler: (
     channel: CHANNELS,
