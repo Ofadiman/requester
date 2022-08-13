@@ -11,10 +11,16 @@ import {
 } from '@mui/material'
 import { AddRounded, CloseRounded, KeyRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
+import { Workspace, workspacesSlice } from '../../redux/workspaces/workspaces.slice'
 import { typeGuards } from '../../utils/type-guards'
+import { uuidFactory } from '../../utils/uuid.factory'
 
 export const CreateWorkspaceView: FC = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [isWorkspacePickerCanceledSnackbarOpen, setIsWorkspacePickerCanceledSnackbarOpen] =
     useState(false)
   const [isWorkspaceAlreadyExistSnackbarOpen, setIsWorkspaceAlreadyExistSnackbarOpen] =
@@ -123,6 +129,18 @@ export const CreateWorkspaceView: FC = () => {
     setWorkspaceName(event.target.value)
   }
 
+  const handleWorkspaceCreate = () => {
+    const pickedWorkspace: Workspace = {
+      encryptionKey,
+      id: uuidFactory.generateVersion4(),
+      name: workspaceName,
+      path: workspacePath,
+    }
+
+    dispatch(workspacesSlice.actions.addOne(pickedWorkspace))
+    navigate('/http-requests', { replace: true })
+  }
+
   return (
     <>
       <Grid
@@ -206,7 +224,9 @@ export const CreateWorkspaceView: FC = () => {
             </Grid>
           </Grid>
 
-          <Button disabled={isCreateWorkspaceButtonDisabled}>Create workspace</Button>
+          <Button disabled={isCreateWorkspaceButtonDisabled} onClick={handleWorkspaceCreate}>
+            Create workspace
+          </Button>
         </Grid>
       </Grid>
       <Snackbar
