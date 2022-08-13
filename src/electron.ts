@@ -197,6 +197,19 @@ app.whenReady().then(async () => {
   })
 
   ipcMain.handle(
+    CHANNELS.CHECK_IF_WORKSPACE_DIRECTORY_EXISTS,
+    async (_event, path: string): Promise<boolean> => {
+      try {
+        await fs.promises.stat(`${path}/${DEFAULT_REQUESTER_WORKSPACE_DIRECTORY_NAME}`)
+
+        return true
+      } catch (_error) {
+        return false
+      }
+    },
+  )
+
+  ipcMain.handle(
     CHANNELS.HTTP_MAKE_REQUEST,
     async (_event, args: any): Promise<Pick<AxiosResponse, 'data' | 'status' | 'headers'>> => {
       logger.info('Arguments for http request', args)

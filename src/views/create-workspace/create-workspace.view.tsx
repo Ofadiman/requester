@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from 'react'
+import React, { ChangeEvent, FC, useMemo, useState } from 'react'
 import { Button, Grid, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material'
 import { CasinoRounded, AddRounded, CloseRounded, KeyRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
@@ -8,15 +8,36 @@ import { typeGuards } from '../../utils/type-guards'
 export const CreateWorkspaceView: FC = () => {
   // const dispatch = useDispatch()
   // const navigate = useNavigate()
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false)
+  const [isWorkspacePickerCanceledSnackbarOpen, setIsWorkspacePickerCanceledSnackbarOpen] =
+    useState(false)
+  const [isWorkspaceAlreadyExistSnackbarOpen, setIsWorkspaceAlreadyExistSnackbarOpen] =
+    useState(false)
   const [workspacePath, setWorkspacePath] = useState('')
   const [encryptionKey, setEncryptionKey] = useState('')
+  const [hasWorkspaceAlreadyExistsError, setHasWorkspaceAlreadyExistsError] = useState(false)
+  const isCreateWorkspaceButtonDisabled = useMemo<boolean>(() => {
+    const isWorkspaceNotSet = workspacePath.length === 0
+    if (isWorkspaceNotSet) {
+      return true
+    }
+
+    const isEncryptionKeyNotSet = encryptionKey.length === 0
+    if (isEncryptionKeyNotSet) {
+      return true
+    }
+
+    if (hasWorkspaceAlreadyExistsError) {
+      return true
+    }
+
+    return false
+  }, [encryptionKey.length, hasWorkspaceAlreadyExistsError, workspacePath.length])
 
   const openDirectoryPicker = async () => {
     const result: Electron.OpenDialogReturnValue = await window.electron.openDirectoryPicker()
 
     if (result.canceled) {
-      setIsSnackbarOpen(true)
+      setIsWorkspacePickerCanceledSnackbarOpen(true)
 
       return
     }
@@ -27,7 +48,23 @@ export const CreateWorkspaceView: FC = () => {
       throw new Error(`Workspace path cannot be undefined.`)
     }
 
+    const doesWorkspaceExist = await window.electron.checkIfWorkspaceDirectoryExits(workspacePath)
+    const isWorkspacePathAlreadySelected = workspacePath.length !== 0
+
+    if (doesWorkspaceExist && isWorkspacePathAlreadySelected) {
+      setIsWorkspaceAlreadyExistSnackbarOpen(true)
+
+      return
+    }
+
+    if (doesWorkspaceExist && !isWorkspacePathAlreadySelected) {
+      setHasWorkspaceAlreadyExistsError(true)
+
+      return
+    }
+
     setWorkspacePath(workspacePath)
+    setHasWorkspaceAlreadyExistsError(false)
 
     // const pickedWorkspace: Workspace = {
     //   encryptionKey: uuidFactory.generateVersion4(),
@@ -40,13 +77,28 @@ export const CreateWorkspaceView: FC = () => {
     // navigate('/http-requests', { replace: true })
   }
 
-  const handleSnackbarClose = (_event: React.SyntheticEvent | Event, reason?: string) => {
+  const handleWorkspacePickerCanceledSnackbarClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
     // This line is taken from MaterialUI documentation and I don't know what it is doing.
     if (reason === 'clickaway') {
       return
     }
 
-    setIsSnackbarOpen(false)
+    setIsWorkspacePickerCanceledSnackbarOpen(false)
+  }
+
+  const handleWorkspaceAlreadyExistSnackbarClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    // This line is taken from MaterialUI documentation and I don't know what it is doing.
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setIsWorkspaceAlreadyExistSnackbarOpen(false)
   }
 
   const generateEncryptionKey = async () => {
@@ -100,6 +152,10 @@ export const CreateWorkspaceView: FC = () => {
           <Grid item container flexDirection="row" flexWrap="nowrap">
             <Grid item container flexGrow={1} justifyContent="center" alignItems="center">
               <TextField
+                error={hasWorkspaceAlreadyExistsError}
+                helperText={
+                  hasWorkspaceAlreadyExistsError ? 'Requester workspace already exists' : ''
+                }
                 fullWidth
                 id="workspace-directory-4130617d-7d44-43ff-ae39-60e533d683ca"
                 label="Workspace directory"
@@ -116,27 +172,41 @@ export const CreateWorkspaceView: FC = () => {
               </IconButton>
             </Grid>
           </Grid>
-          <Button>Create workspace</Button>
+          <Button disabled={isCreateWorkspaceButtonDisabled}>Create workspace</Button>
         </Grid>
       </Grid>
-      {isSnackbarOpen && (
-        <Snackbar
-          open={isSnackbarOpen}
-          autoHideDuration={dayjs.duration({ seconds: 5 }).asMilliseconds()}
-          onClose={handleSnackbarClose}
-          message="Workspace picker canceled"
-          action={
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleSnackbarClose}
-            >
-              <CloseRounded fontSize="small" />
-            </IconButton>
-          }
-        />
-      )}
+      <Snackbar
+        open={isWorkspacePickerCanceledSnackbarOpen}
+        autoHideDuration={dayjs.duration({ seconds: 5 }).asMilliseconds()}
+        onClose={handleWorkspacePickerCanceledSnackbarClose}
+        message="Workspace picker canceled"
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleWorkspacePickerCanceledSnackbarClose}
+          >
+            <CloseRounded fontSize="small" />
+          </IconButton>
+        }
+      />
+      <Snackbar
+        open={isWorkspaceAlreadyExistSnackbarOpen}
+        autoHideDuration={dayjs.duration({ seconds: 5 }).asMilliseconds()}
+        onClose={handleWorkspaceAlreadyExistSnackbarClose}
+        message="Requester workspace already exists"
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleWorkspaceAlreadyExistSnackbarClose}
+          >
+            <CloseRounded fontSize="small" />
+          </IconButton>
+        }
+      />
     </>
   )
 }

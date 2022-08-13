@@ -28,6 +28,8 @@ const PRELOADED = {
     requestName: string
     workspacePath: string
   }): Promise<void> => ipcRenderer.invoke(CHANNELS.HTTP_REQUESTS_CHANGE_URL, args),
+  checkIfWorkspaceDirectoryExits: async (path: string): Promise<boolean> =>
+    ipcRenderer.invoke(CHANNELS.CHECK_IF_WORKSPACE_DIRECTORY_EXISTS, path),
   // TODO: I would probably prefer to use `persistor` object to reset redux store state from the main process.
   clearReduxStore: async () => ipcRenderer.invoke(CHANNELS.REDUX_STORE_CLEAR),
   createHttpRequestFile: async (args: CreateHttpRequestFileArgs): Promise<void> =>
