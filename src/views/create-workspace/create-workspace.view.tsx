@@ -1,19 +1,27 @@
 import React, { ChangeEvent, FC, useMemo, useState } from 'react'
-import { Button, Grid, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material'
-import { CasinoRounded, AddRounded, CloseRounded, KeyRounded } from '@mui/icons-material'
+import {
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Snackbar,
+  TextField,
+  Typography,
+} from '@mui/material'
+import { AddRounded, CloseRounded, KeyRounded } from '@mui/icons-material'
 import dayjs from 'dayjs'
 
 import { typeGuards } from '../../utils/type-guards'
 
 export const CreateWorkspaceView: FC = () => {
-  // const dispatch = useDispatch()
-  // const navigate = useNavigate()
   const [isWorkspacePickerCanceledSnackbarOpen, setIsWorkspacePickerCanceledSnackbarOpen] =
     useState(false)
   const [isWorkspaceAlreadyExistSnackbarOpen, setIsWorkspaceAlreadyExistSnackbarOpen] =
     useState(false)
   const [workspacePath, setWorkspacePath] = useState('')
   const [encryptionKey, setEncryptionKey] = useState('')
+  const [workspaceName, setWorkspaceName] = useState('')
   const [hasWorkspaceAlreadyExistsError, setHasWorkspaceAlreadyExistsError] = useState(false)
   const isCreateWorkspaceButtonDisabled = useMemo<boolean>(() => {
     const isWorkspaceNotSet = workspacePath.length === 0
@@ -26,12 +34,22 @@ export const CreateWorkspaceView: FC = () => {
       return true
     }
 
+    const isWorkspaceNameNotSet = workspaceName.length === 0
+    if (isWorkspaceNameNotSet) {
+      return true
+    }
+
     if (hasWorkspaceAlreadyExistsError) {
       return true
     }
 
     return false
-  }, [encryptionKey.length, hasWorkspaceAlreadyExistsError, workspacePath.length])
+  }, [
+    encryptionKey.length,
+    hasWorkspaceAlreadyExistsError,
+    workspaceName.length,
+    workspacePath.length,
+  ])
 
   const openDirectoryPicker = async () => {
     const result: Electron.OpenDialogReturnValue = await window.electron.openDirectoryPicker()
@@ -65,16 +83,6 @@ export const CreateWorkspaceView: FC = () => {
 
     setWorkspacePath(workspacePath)
     setHasWorkspaceAlreadyExistsError(false)
-
-    // const pickedWorkspace: Workspace = {
-    //   encryptionKey: uuidFactory.generateVersion4(),
-    //   id: uuidFactory.generateVersion4(),
-    //   name: `Some name here ${Math.random()}`,
-    //   path: workspacePath,
-    // }
-
-    // dispatch(workspacesSlice.actions.addOne(pickedWorkspace))
-    // navigate('/http-requests', { replace: true })
   }
 
   const handleWorkspacePickerCanceledSnackbarClose = (
@@ -111,6 +119,10 @@ export const CreateWorkspaceView: FC = () => {
     setEncryptionKey(event.target.value)
   }
 
+  const handleWorkspaceNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setWorkspaceName(event.target.value)
+  }
+
   return (
     <>
       <Grid
@@ -124,7 +136,28 @@ export const CreateWorkspaceView: FC = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Grid item container flexDirection="column" gap={3} sx={{ width: 400 }}>
+        <Grid
+          component={Paper}
+          item
+          container
+          flexDirection="column"
+          gap={6}
+          sx={{ padding: 6, width: 500 }}
+        >
+          <Grid item>
+            <Typography variant="h3">Create workspace</Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              fullWidth
+              id="workspace-name-3f1063ad-57f0-4af8-8b6a-2febe9d3b6ce"
+              label="Workspace name"
+              variant="standard"
+              onChange={handleWorkspaceNameChange}
+              value={workspaceName}
+            />
+          </Grid>
+
           <Grid item container flexDirection="row" flexWrap="nowrap">
             <Grid item container flexGrow={1} justifyContent="center" alignItems="center">
               <TextField
@@ -135,20 +168,18 @@ export const CreateWorkspaceView: FC = () => {
                 onChange={handleEncryptionKeyChange}
                 value={encryptionKey}
                 InputProps={{
-                  startAdornment: (
+                  endAdornment: (
                     <InputAdornment position="start">
-                      <KeyRounded />
+                      <IconButton onClick={generateEncryptionKey} size="small">
+                        <KeyRounded />
+                      </IconButton>
                     </InputAdornment>
                   ),
                 }}
               />
             </Grid>
-            <Grid item container justifyContent="center" alignItems="center" xs>
-              <IconButton onClick={generateEncryptionKey}>
-                <CasinoRounded />
-              </IconButton>
-            </Grid>
           </Grid>
+
           <Grid item container flexDirection="row" flexWrap="nowrap">
             <Grid item container flexGrow={1} justifyContent="center" alignItems="center">
               <TextField
@@ -162,16 +193,19 @@ export const CreateWorkspaceView: FC = () => {
                 variant="standard"
                 value={workspacePath}
                 InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton onClick={openDirectoryPicker} size="small">
+                        <AddRounded />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                   readOnly: true,
                 }}
               />
             </Grid>
-            <Grid item container justifyContent="center" alignItems="center" xs>
-              <IconButton onClick={openDirectoryPicker}>
-                <AddRounded />
-              </IconButton>
-            </Grid>
           </Grid>
+
           <Button disabled={isCreateWorkspaceButtonDisabled}>Create workspace</Button>
         </Grid>
       </Grid>
